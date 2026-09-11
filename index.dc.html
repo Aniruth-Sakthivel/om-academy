@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -57,8 +57,6 @@
   .splash{position:absolute;opacity:0.9}
   .eyebrow-light{background:white;color:var(--violet)}
   .tab{cursor:pointer}
-  .cal-cell{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:600;color:var(--ink);background:white;border:1px solid oklch(0.93 0.006 90)}
-  .cal-dot{width:6px;height:6px;border-radius:50%}
   label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
   input,select,textarea{width:100%;font-size:14px;font-family:Inter,sans-serif;padding:11px 13px;border-radius:8px;border:1px solid oklch(0.87 0.006 90);background:white;color:var(--ink)}
   input:focus,select:focus,textarea:focus{outline:2px solid oklch(0.48 0.19 292 / 0.4)}
@@ -71,6 +69,13 @@
   @keyframes spinSlower{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
   .btn-primary svg,.btn-primary .arrow{transition:transform 0.2s}
   .btn-pill:hover svg{transform:translateX(3px)}
+
+  /* Lightbox */
+  .lb-icon-btn{width:36px;height:36px;border-radius:50%;background:oklch(1 0 0 / 0.1);border:none;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+  .lb-icon-btn:hover{background:oklch(1 0 0 / 0.2)}
+  .lb-arrow-btn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:oklch(1 0 0 / 0.12);border:none;color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1}
+  .lb-arrow-btn:hover{background:oklch(1 0 0 / 0.25)}
+  .lb-thumb{width:74px;height:56px;object-fit:cover;border-radius:6px;cursor:pointer;flex-shrink:0;transition:opacity 0.2s}
 
   /* Responsive */
   .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--ink);flex-shrink:0}
@@ -97,11 +102,15 @@
     div[style*="grid-template-columns:repeat(3"],
     div[style*="grid-template-columns:repeat(4"],
     div[style*="grid-template-columns:repeat(5"],
-    div[style*="grid-template-columns:repeat(6"]{grid-template-columns:repeat(1,minmax(0,1fr))!important}
+    div[style*="grid-template-columns:repeat(6"],
+    form[style*="grid-template-columns:repeat(2"]{grid-template-columns:repeat(1,minmax(0,1fr))!important}
     div[style*="grid-template-columns:1.4fr 1fr 1fr 1.2fr"]{grid-template-columns:1fr!important}
     div[style*="display:flex;align-items:stretch;gap:0"]{flex-direction:column!important}
     div[style*="width:22px;height:2px;align-self:center"]{display:none}
     section#home{min-height:auto!important;padding-top:56px!important;padding-bottom:56px!important}
+    .lb-title-center{display:none}
+    .lb-thumb{width:52px!important;height:40px!important}
+    .lb-arrow-btn{width:38px!important;height:38px!important}
   }
 </style>
 </helmet>
@@ -114,7 +123,7 @@
         <div style="width:44px;height:44px;border-radius:14px;background:var(--violet);display:flex;align-items:center;justify-content:center;color:white;font-family:Poppins,sans-serif;font-weight:700;font-size:18px;flex-shrink:0">OM</div>
         <div>
           <div style="font-family:Poppins,sans-serif;font-weight:700;font-size:19px;color:var(--ink);line-height:1.1">OM <span style="color:var(--violet)">Academy</span></div>
-          <div style="font-size:11px;letter-spacing:0.12em;color:var(--ink-soft);font-weight:600">LEARN · GROW · SUCCEED</div>
+          <div style="font-size:11px;letter-spacing:0.12em;color:var(--ink-soft);font-weight:600">LEARN Â· GROW Â· SUCCEED</div>
         </div>
       </div>
       <nav class="{{ navClass }}" style="color:var(--ink)">
@@ -474,75 +483,6 @@
     </div>
   </section>
 
-  <!-- IMPORTANT DATES -->
-  <section id="important-dates" style="padding:56px 32px;background:oklch(0.97 0.004 90)">
-    <div class="fu" style="text-align:center;max-width:640px;margin:0 auto 32px">
-      <div class="eyebrow" style="background:oklch(0.42 0.14 150)">Plan Ahead</div>
-      <h2 style="font-family:Poppins,sans-serif;font-weight:800;font-size:clamp(26px,3vw,36px);margin:0 0 12px;color:var(--ink)">Important Dates</h2>
-      <p style="color:var(--ink-soft);font-size:15.5px;line-height:1.6;margin:0">Stay informed. Plan ahead. Never miss an important deadline.</p>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;border-bottom:1px solid oklch(0.91 0.006 90);padding-bottom:20px;margin-bottom:28px">
-      <sc-for list="{{ dateFilters }}" as="f" hint-placeholder-count="6">
-        <span class="tab" style="font-size:13.5px;font-weight:600;padding:8px 16px;border-radius:100px;background:{{ f.active }};color:{{ f.color }};border:1px solid oklch(0.9 0.006 90)">{{ f.label }}</span>
-      </sc-for>
-    </div>
-    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:start">
-
-      <!-- CALENDAR -->
-      <div style="border:1px solid oklch(0.91 0.006 90);border-radius:14px;padding:24px;background:white;min-width:0">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-          <span class="tab" style="font-size:16px;color:var(--ink-soft)">‹</span>
-          <div style="font-family:Poppins,sans-serif;font-weight:700;font-size:16px;color:var(--ink)">August 2026</div>
-          <span class="tab" style="font-size:16px;color:var(--ink-soft)">›</span>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:8px">
-          <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7">
-            <div style="text-align:center;font-size:11.5px;font-weight:700;color:var(--ink-soft)">{{ w }}</div>
-          </sc-for>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px">
-          <sc-for list="{{ calendarDays }}" as="d" hint-placeholder-count="35">
-            <div class="cal-cell" style="opacity:{{ d.opacity }};border-color:{{ d.selected }}">
-              <span>{{ d.day }}</span>
-              <sc-if value="{{ d.hasDot }}" hint-placeholder-val="{{ true }}">
-                <span class="cal-dot" style="background:{{ d.dotColor }}"></span>
-              </sc-if>
-            </div>
-          </sc-for>
-        </div>
-      </div>
-
-      <!-- DETAIL PANEL -->
-      <div style="min-width:0;display:flex;flex-direction:column;gap:20px">
-        <div style="border:1px solid oklch(0.91 0.006 90);border-radius:14px;padding:22px;background:white">
-          <div style="font-family:Poppins,sans-serif;font-weight:700;font-size:15px;margin-bottom:12px;color:var(--ink)">Events on 23 August</div>
-          <div style="display:flex;gap:12px;align-items:flex-start">
-            <div style="width:4px;height:36px;border-radius:4px;background:oklch(0.42 0.14 150);flex-shrink:0"></div>
-            <div>
-              <div style="font-weight:700;font-size:14px;color:var(--ink)">Last Date to Submit Scholarship Form</div>
-              <div style="font-size:12.5px;color:var(--ink-soft);margin-top:2px">11:59 PM</div>
-            </div>
-          </div>
-        </div>
-        <div style="border:1px solid oklch(0.91 0.006 90);border-radius:14px;padding:22px;background:white">
-          <div style="font-family:Poppins,sans-serif;font-weight:700;font-size:15px;margin-bottom:14px;color:var(--ink)">Upcoming Important Dates</div>
-          <sc-for list="{{ importantDates }}" as="d" hint-placeholder-count="4">
-            <div style="display:flex;gap:14px;padding:12px 0;border-top:1px solid oklch(0.94 0.006 90)">
-              <div style="text-align:center;background:oklch(0.95 0.05 150);border-radius:8px;padding:6px 10px;min-width:52px;flex-shrink:0">
-                <div style="font-family:Poppins,sans-serif;font-weight:800;font-size:16px;color:oklch(0.4 0.13 150)">{{ d.day }}</div>
-                <div style="font-size:9.5px;font-weight:600;color:oklch(0.4 0.13 150)">{{ d.month }}</div>
-              </div>
-              <div style="min-width:0">
-                <div style="font-weight:700;font-size:13.5px;color:var(--ink);line-height:1.35">{{ d.title }}</div>
-                <div style="font-size:12px;color:var(--ink-soft);margin-top:2px">{{ d.time }}</div>
-              </div>
-            </div>
-          </sc-for>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- CAREER PROCESS -->
   <section style="padding:56px 32px;background:oklch(0.97 0.004 90)">
     <div class="fu" style="text-align:center;max-width:640px;margin:0 auto 52px">
@@ -623,7 +563,7 @@
     <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
 
       <!-- Real photo -->
-      <div class="fu card-lift" style="animation-delay:0s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox0 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="assets/om-academy-building.jpeg" alt="OM Academy Hisar center building" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -634,7 +574,7 @@
       </div>
 
       <!-- Icon tiles for categories with no photo yet -->
-      <div class="fu card-lift" style="animation-delay:0.06s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0.06s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox1 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="https://images.unsplash.com/photo-1657812670261-7b76ba04525c?auto=format&fit=crop&w=600&q=60" alt="Digital Marketing Workshop" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -643,7 +583,7 @@
           <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-top:2px">Digital Marketing Workshop</div>
         </div>
       </div>
-      <div class="fu card-lift" style="animation-delay:0.12s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0.12s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox2 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="https://images.unsplash.com/photo-1569653402334-2e98fbaa80ee?auto=format&fit=crop&w=600&q=60" alt="Computer Lab Training" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -652,7 +592,7 @@
           <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-top:2px">Computer Lab Training</div>
         </div>
       </div>
-      <div class="fu card-lift" style="animation-delay:0.18s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0.18s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox3 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=60" alt="Certificate Distribution Ceremony" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -661,7 +601,7 @@
           <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-top:2px">Certificate Distribution</div>
         </div>
       </div>
-      <div class="fu card-lift" style="animation-delay:0.24s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0.24s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox4 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&q=60" alt="Campus Placement Drive" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -670,7 +610,7 @@
           <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-top:2px">Campus Placement Drive</div>
         </div>
       </div>
-      <div class="fu card-lift" style="animation-delay:0.3s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0.3s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox5 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=60" alt="Spoken English Class" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -679,7 +619,7 @@
           <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-top:2px">Spoken English Class</div>
         </div>
       </div>
-      <div class="fu card-lift" style="animation-delay:0.36s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0.36s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox6 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=60" alt="Web Development Workshop" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -688,7 +628,7 @@
           <div style="font-weight:600;font-size:13.5px;color:var(--ink);margin-top:2px">Web Development Workshop</div>
         </div>
       </div>
-      <div class="fu card-lift" style="animation-delay:0.42s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90)">
+      <div class="fu card-lift" style="animation-delay:0.42s;border-radius:12px;overflow:hidden;background:white;border:1px solid oklch(0.91 0.006 90);cursor:pointer" onClick="{{ openLightbox7 }}">
         <div style="width:100%;aspect-ratio:4/3;overflow:hidden">
           <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=60" alt="Hardware and Networking Lab" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s" style-hover="transform:scale(1.06)">
         </div>
@@ -709,6 +649,83 @@
       </sc-for>
     </div>
   </section>
+
+  <!-- GALLERY LIGHTBOX -->
+  <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:200;background:oklch(0.3 0.03 290 / 0.55);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);display:flex;flex-direction:column;padding:{{ lightboxOverlayPadding }}">
+      <div style="display:flex;flex-direction:column;height:100%;gap:16px;max-width:{{ lightboxStageMaxWidth }};width:100%;margin:0 auto;min-height:0">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;color:white">
+          <div style="font-size:14px;font-weight:600;letter-spacing:0.02em;min-width:60px">{{ lightboxCounter }}</div>
+          <div class="lb-title-center" style="font-family:Poppins,sans-serif;font-weight:700;font-size:15px;text-align:center;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ lightboxTitle }}</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+            <button class="lb-icon-btn" onClick="{{ zoomOut }}" aria-label="Zoom out">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
+            </button>
+            <button class="lb-icon-btn" onClick="{{ zoomIn }}" aria-label="Zoom in">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+            </button>
+            <button class="lb-icon-btn" onClick="{{ toggleExpand }}" aria-label="Toggle expanded view">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
+            </button>
+            <button class="lb-icon-btn" onClick="{{ closeLightbox }}" aria-label="Close">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center">
+          <button class="lb-arrow-btn" style="left:0" onClick="{{ lightboxPrev }}" aria-label="Previous photo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <sc-if value="{{ lightboxIs0 }}" hint-placeholder-val="{{ true }}">
+            <img src="assets/om-academy-building.jpeg" alt="OM Academy – Hisar Center" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <sc-if value="{{ lightboxIs1 }}" hint-placeholder-val="{{ false }}">
+            <img src="https://images.unsplash.com/photo-1657812670261-7b76ba04525c?auto=format&fit=crop&w=1400&q=75" alt="Digital Marketing Workshop" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <sc-if value="{{ lightboxIs2 }}" hint-placeholder-val="{{ false }}">
+            <img src="https://images.unsplash.com/photo-1569653402334-2e98fbaa80ee?auto=format&fit=crop&w=1400&q=75" alt="Computer Lab Training" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <sc-if value="{{ lightboxIs3 }}" hint-placeholder-val="{{ false }}">
+            <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1400&q=75" alt="Certificate Distribution" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <sc-if value="{{ lightboxIs4 }}" hint-placeholder-val="{{ false }}">
+            <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1400&q=75" alt="Campus Placement Drive" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <sc-if value="{{ lightboxIs5 }}" hint-placeholder-val="{{ false }}">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=75" alt="Spoken English Class" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <sc-if value="{{ lightboxIs6 }}" hint-placeholder-val="{{ false }}">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=75" alt="Web Development Workshop" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <sc-if value="{{ lightboxIs7 }}" hint-placeholder-val="{{ false }}">
+            <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1400&q=75" alt="Hardware & Networking Lab" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;transition:transform 0.25s;transform:{{ lightboxImgTransform }}">
+          </sc-if>
+          <button class="lb-arrow-btn" style="right:0" onClick="{{ lightboxNext }}" aria-label="Next photo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:white">
+          <span style="font-size:11px;font-weight:700;padding:5px 12px;border-radius:100px;background:{{ lightboxCategoryColor }};color:white;letter-spacing:0.03em;flex-shrink:0">{{ lightboxCategory }}</span>
+          <span style="font-family:Poppins,sans-serif;font-weight:600;font-size:14.5px">{{ lightboxTitle }}</span>
+          <span style="font-size:13px;color:oklch(0.85 0.01 290);margin-left:auto">{{ lightboxDate }} Â· {{ lightboxLocation }}</span>
+        </div>
+
+        <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+          <img class="lb-thumb" src="assets/om-academy-building.jpeg" alt="OM Academy – Hisar Center" onClick="{{ lightboxThumb0 }}" style="border:{{ thumbBorder0 }};opacity:{{ thumbOpacity0 }}">
+          <img class="lb-thumb" src="https://images.unsplash.com/photo-1657812670261-7b76ba04525c?auto=format&fit=crop&w=200&q=60" alt="Digital Marketing Workshop" onClick="{{ lightboxThumb1 }}" style="border:{{ thumbBorder1 }};opacity:{{ thumbOpacity1 }}">
+          <img class="lb-thumb" src="https://images.unsplash.com/photo-1569653402334-2e98fbaa80ee?auto=format&fit=crop&w=200&q=60" alt="Computer Lab Training" onClick="{{ lightboxThumb2 }}" style="border:{{ thumbBorder2 }};opacity:{{ thumbOpacity2 }}">
+          <img class="lb-thumb" src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=200&q=60" alt="Certificate Distribution" onClick="{{ lightboxThumb3 }}" style="border:{{ thumbBorder3 }};opacity:{{ thumbOpacity3 }}">
+          <img class="lb-thumb" src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=200&q=60" alt="Campus Placement Drive" onClick="{{ lightboxThumb4 }}" style="border:{{ thumbBorder4 }};opacity:{{ thumbOpacity4 }}">
+          <img class="lb-thumb" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=200&q=60" alt="Spoken English Class" onClick="{{ lightboxThumb5 }}" style="border:{{ thumbBorder5 }};opacity:{{ thumbOpacity5 }}">
+          <img class="lb-thumb" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=200&q=60" alt="Web Development Workshop" onClick="{{ lightboxThumb6 }}" style="border:{{ thumbBorder6 }};opacity:{{ thumbOpacity6 }}">
+          <img class="lb-thumb" src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=200&q=60" alt="Hardware & Networking Lab" onClick="{{ lightboxThumb7 }}" style="border:{{ thumbBorder7 }};opacity:{{ thumbOpacity7 }}">
+        </div>
+      </div>
+    </div>
+  </sc-if>
 
   <!-- CENTERS -->
   <section id="centers" style="position:relative;padding:56px 32px;background:oklch(0.97 0.004 90);overflow:hidden">
@@ -836,134 +853,186 @@
     </div>
   </section>
 
-  <!-- ENQUIRY -->
-  <section id="enquire" style="padding:0 32px 56px">
-    <div class="fu" style="text-align:center;max-width:640px;margin:0 auto 32px">
-      <div class="eyebrow">Get In Touch</div>
-      <h2 style="font-family:Poppins,sans-serif;font-weight:800;font-size:clamp(26px,3vw,36px);margin:0 0 4px;color:var(--ink)">Enquire Now</h2>
-      <svg class="squiggle" viewBox="0 0 120 10"><path d="M2 8C15 2 25 2 35 8C45 2 55 2 65 8C75 2 85 2 95 8C105 2 115 2 118 6" stroke="var(--violet)" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
-      <p style="color:var(--ink-soft);font-size:15.5px;line-height:1.6;margin:14px 0 0">Share your details and our team will reach out to guide you through courses, admissions and career opportunities.</p>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:0;border:1px solid oklch(0.91 0.006 90);border-radius:20px;overflow:hidden;max-width:1080px;margin:0 auto;box-shadow:0 20px 50px -24px oklch(0.2 0.02 260 / 0.25)">
+  <!-- ENQUIRY MODAL -->
+  <section id="enquire"></section>
+  <sc-if value="{{ enquiryOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:210;background:oklch(0.15 0.02 264 / 0.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding:40px 24px;overflow-y:auto">
+    <div style="position:relative;max-width:1080px;width:100%;margin:auto">
+      <button onClick="{{ closeEnquiry }}" aria-label="Close" style="position:absolute;top:14px;right:14px;z-index:5;width:34px;height:34px;border-radius:50%;background:white;border:none;box-shadow:0 4px 14px -4px oklch(0.2 0.02 260 / 0.35);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:0;border:1px solid oklch(0.91 0.006 90);border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -20px oklch(0.1 0.02 260 / 0.5)">
 
       <!-- LEFT PANEL -->
-      <div style="position:relative;padding:40px 36px;background:linear-gradient(160deg,var(--violet) 0%,var(--violet-dark) 100%);color:white;min-width:0">
-        <div style="font-family:Poppins,sans-serif;font-weight:800;font-size:24px;line-height:1.3;margin-bottom:12px">We're Here to Help You Take the Next Step!</div>
-        <p style="font-size:14px;color:oklch(0.9 0.02 255);line-height:1.6;margin:0 0 28px">Share your details and our team will reach out to guide you through courses, admissions and career opportunities.</p>
-        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:34px;height:34px;border-radius:9px;background:oklch(0.98 0.01 255 / 0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            </div>
-            <div style="font-size:13.5px;font-weight:600">Wide Range of Courses</div>
+      <div style="position:relative;padding:32px 28px;color:white;min-width:0;background:linear-gradient(165deg,oklch(0.26 0.09 264) 0%,oklch(0.19 0.07 264) 100%)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+          <div style="width:36px;height:36px;border-radius:50%;background:oklch(0.98 0.01 255 / 0.12);border:1.5px solid oklch(0.7 0.14 90 / 0.6);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(0.78 0.16 90)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5"/></svg>
           </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:34px;height:34px;border-radius:9px;background:oklch(0.98 0.01 255 / 0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.5" fill="white"/></svg>
-            </div>
-            <div style="font-size:13.5px;font-weight:600">Expert Career Guidance</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:34px;height:34px;border-radius:9px;background:oklch(0.98 0.01 255 / 0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M9 13.5L7 22l5-3 5 3-2-8.5"/></svg>
-            </div>
-            <div style="font-size:13.5px;font-weight:600">Recognized Certifications</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:34px;height:34px;border-radius:9px;background:oklch(0.98 0.01 255 / 0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-            </div>
-            <div style="font-size:13.5px;font-weight:600">Placement Assistance</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="width:34px;height:34px;border-radius:9px;background:oklch(0.98 0.01 255 / 0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6M9 12h.01M15 12h.01M9 8h.01M15 8h.01"/></svg>
-            </div>
-            <div style="font-size:13.5px;font-weight:600">Modern Infrastructure</div>
+          <div>
+            <div style="font-family:Poppins,sans-serif;font-weight:700;font-size:15px;color:white;line-height:1.1">OM Academy</div>
+            <div style="font-size:9.5px;letter-spacing:0.1em;color:oklch(0.78 0.16 90);font-weight:700">LEARN · GROW · SUCCEED</div>
           </div>
         </div>
-        <img src="assets/om-academy-building.jpeg" alt="OM Academy building" style="width:100%;border-radius:12px;display:block;object-fit:cover;max-height:160px">
+        <div style="font-family:Poppins,sans-serif;font-weight:800;font-size:22px;line-height:1.3;margin-bottom:10px">We're Here to Help You Take the <span style="color:oklch(0.78 0.16 90)">Next Step!</span></div>
+        <p style="font-size:13px;color:oklch(0.82 0.02 264);line-height:1.6;margin:0 0 8px">Have a question or need more information? Fill out the form and our team will connect with you shortly.</p>
+        <div style="width:34px;height:3px;border-radius:2px;background:oklch(0.78 0.16 90);margin-bottom:20px"></div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:20px">
+          <div style="background:white;border-radius:12px;padding:12px">
+            <div style="width:30px;height:30px;border-radius:9px;background:oklch(0.93 0.05 255);display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.19 255)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;line-height:1.3;color:var(--ink)">Wide Range of Courses</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:12px">
+            <div style="width:30px;height:30px;border-radius:9px;background:oklch(0.93 0.06 150);display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="oklch(0.46 0.15 150)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.5" fill="oklch(0.46 0.15 150)"/></svg>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;line-height:1.3;color:var(--ink)">Expert Career Guidance</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:12px">
+            <div style="width:30px;height:30px;border-radius:9px;background:oklch(0.93 0.05 255);display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.19 255)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M9 13.5L7 22l5-3 5 3-2-8.5"/></svg>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;line-height:1.3;color:var(--ink)">Recognized Certifications</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:12px">
+            <div style="width:30px;height:30px;border-radius:9px;background:oklch(0.93 0.06 50);display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="oklch(0.58 0.17 50)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;line-height:1.3;color:var(--ink)">Placement Assistance</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:12px">
+            <div style="width:30px;height:30px;border-radius:9px;background:oklch(0.92 0.05 300);display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.18 300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6M9 12h.01M15 12h.01M9 8h.01M15 8h.01"/></svg>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;line-height:1.3;color:var(--ink)">Modern Infrastructure</div>
+          </div>
+          <div style="background:white;border-radius:12px;padding:12px">
+            <div style="width:30px;height:30px;border-radius:9px;background:oklch(0.92 0.05 300);display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.18 300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;line-height:1.3;color:var(--ink)">24/7 Student Support</div>
+          </div>
+        </div>
+        <div style="position:relative;border-radius:12px;overflow:hidden">
+          <img src="assets/om-academy-building.jpeg" alt="OM Academy building" style="width:100%;height:180px;display:block;object-fit:cover">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,oklch(0.19 0.07 264 / 0.5) 0%,transparent 18%,transparent 82%,oklch(0.19 0.07 264 / 0.55) 100%)"></div>
+        </div>
       </div>
 
       <!-- RIGHT PANEL: FORM -->
-      <div style="padding:40px 40px;background:white;min-width:0">
-        <div style="font-family:Poppins,sans-serif;font-weight:700;font-size:19px;margin-bottom:4px;color:var(--ink)">Enquiry Form</div>
-        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 22px">Fields marked * are required.</p>
+      <div style="padding:36px 40px;background:white;min-width:0">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <div style="width:32px;height:32px;border-radius:9px;background:oklch(0.94 0.03 255);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="oklch(0.5 0.19 255)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div style="font-family:Poppins,sans-serif;font-weight:700;font-size:19px;color:var(--ink)">Enquiry Form</div>
+        </div>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px">Please fill in your details and we will get back to you.</p>
+        <div style="width:34px;height:3px;border-radius:2px;background:oklch(0.55 0.16 150);margin-bottom:22px"></div>
 
-        <form onsubmit="return false">
-          <div class="field">
+        <form onsubmit="return false" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+          <div class="field" style="margin-bottom:0">
             <label>Full Name *</label>
-            <input type="text" placeholder="Enter your full name" required>
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></div>
+              <input type="text" placeholder="Enter your full name" required style="padding-left:36px">
+            </div>
           </div>
-          <div class="field">
+          <div class="field" style="margin-bottom:0">
             <label>Mobile Number *</label>
-            <input type="tel" placeholder="10-digit mobile number" required>
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.8 2.2z"/></svg></div>
+              <input type="tel" placeholder="Enter your mobile number" required style="padding-left:36px">
+            </div>
           </div>
-          <div class="field">
+          <div class="field" style="margin-bottom:0">
             <label>Email ID</label>
-            <input type="email" placeholder="you@example.com">
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg></div>
+              <input type="email" placeholder="Enter your email ID" style="padding-left:36px">
+            </div>
           </div>
-          <div class="field">
+          <div class="field" style="margin-bottom:0">
             <label>Current Qualification *</label>
-            <select required>
-              <option value="">Select your qualification</option>
-              <option>Below 10th</option>
-              <option>10th Pass</option>
-              <option>12th Pass</option>
-              <option>Graduate</option>
-              <option>Post Graduate</option>
-              <option>Other</option>
-            </select>
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12.5V17c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-4.5"/></svg></div>
+              <select required style="padding-left:36px">
+                <option value="">Select qualification</option>
+                <option>Below 10th</option>
+                <option>10th Pass</option>
+                <option>12th Pass</option>
+                <option>Graduate</option>
+                <option>Post Graduate</option>
+                <option>Other</option>
+              </select>
+            </div>
           </div>
-          <div class="field">
+          <div class="field" style="margin-bottom:0;grid-column:1/-1">
             <label>Course/Program Interested In *</label>
-            <select required>
-              <option value="">Select a course/program</option>
-              <option>NIELIT</option>
-              <option>HARTRON</option>
-              <option>HKCL</option>
-              <option>Online Degree Programs</option>
-              <option>Other Skill Programs</option>
-            </select>
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+              <select required style="padding-left:36px">
+                <option value="">Select course / program</option>
+                <option>NIELIT</option>
+                <option>HARTRON</option>
+                <option>HKCL</option>
+                <option>Online Degree Programs</option>
+                <option>Other Skill Programs</option>
+              </select>
+            </div>
           </div>
-          <div class="field">
+          <div class="field" style="margin-bottom:0;grid-column:1/-1">
             <label>Preferred Center/Location *</label>
-            <select required>
-              <option value="">Select a center</option>
-              <option>Hisar Center</option>
-              <option>Hansi Center</option>
-              <option>Barwala Center</option>
-            </select>
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <select required style="padding-left:36px">
+                <option value="">Select your preferred center</option>
+                <option>Hisar Center</option>
+                <option>Hansi Center</option>
+                <option>Barwala Center</option>
+              </select>
+            </div>
           </div>
-          <div class="field">
+          <div class="field" style="margin-bottom:0;grid-column:1/-1">
             <label>How did you hear about OM Academy?</label>
-            <select>
-              <option value="">Select an option</option>
-              <option>Social Media</option>
-              <option>Friend/Family Referral</option>
-              <option>Google Search</option>
-              <option>Newspaper/Advertisement</option>
-              <option>Walked Past a Center</option>
-              <option>Other</option>
-            </select>
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v14L3 15v-4z"/><path d="M7 15v4a2 2 0 0 0 2 2h1"/></svg></div>
+              <select style="padding-left:36px">
+                <option value="">Select an option</option>
+                <option>Social Media</option>
+                <option>Friend/Family Referral</option>
+                <option>Google Search</option>
+                <option>Newspaper/Advertisement</option>
+                <option>Walked Past a Center</option>
+                <option>Other</option>
+              </select>
+            </div>
           </div>
-          <div class="field">
+          <div class="field" style="margin-bottom:0;grid-column:1/-1">
             <label>Your Message (Optional)</label>
-            <textarea rows="3" placeholder="Tell us more about what you're looking for"></textarea>
+            <div style="position:relative">
+              <div style="position:absolute;left:12px;top:14px;color:oklch(0.65 0.006 90);display:flex;pointer-events:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <textarea rows="3" placeholder="Write your query here..." style="padding-left:36px"></textarea>
+            </div>
           </div>
-          <div class="field" style="display:flex;align-items:flex-start;gap:8px">
+          <div class="field" style="margin-bottom:0;grid-column:1/-1;display:flex;align-items:flex-start;gap:8px">
             <input type="checkbox" style="width:auto;margin-top:3px" required>
             <label style="margin:0;font-weight:500;font-size:12.5px;color:var(--ink-soft)">I agree to receive updates and notifications from OM Academy.</label>
           </div>
-          <button type="submit" style="width:100%;background:var(--violet);color:white;border:none;padding:14px;border-radius:9px;font-weight:700;font-size:15px;cursor:pointer;margin-top:6px">Submit Enquiry</button>
+          <button type="submit" style="grid-column:1/-1;width:100%;background:oklch(0.26 0.09 264);color:white;border:none;padding:14px;border-radius:9px;font-weight:700;font-size:15px;cursor:pointer;margin-top:2px;display:flex;align-items:center;justify-content:center;gap:6px">Submit Enquiry <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
         </form>
 
         <div style="margin-top:22px;padding-top:18px;border-top:1px solid oklch(0.93 0.006 90);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <span style="color:oklch(0.5 0.16 40);font-size:13px;letter-spacing:1px">★★★★★</span>
-          <span style="font-size:12.5px;color:var(--ink-soft)">Trusted by Students Across Haryana</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--ink)">Trusted by Students Across Haryana</div>
+            <div style="font-size:11.5px;color:var(--ink-soft)">Join Thousands of Successful Learners</div>
+          </div>
           <div style="display:flex;margin-left:auto">
             <sc-for list="{{ avatars }}" as="a" hint-placeholder-count="5">
-              <div style="width:26px;height:26px;border-radius:50%;background:var(--violet);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid white;margin-left:-8px">{{ a }}</div>
+              <div style="width:26px;height:26px;border-radius:50%;background:oklch(0.26 0.09 264);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid white;margin-left:-8px">{{ a }}</div>
             </sc-for>
           </div>
         </div>
@@ -988,7 +1057,7 @@
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;font-size:13.5px">
         <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:white">Explore</div>
-        <a href="#gallery" style="color:oklch(0.7 0.01 290)">Gallery</a><a href="#announcements" style="color:oklch(0.7 0.01 290)">Announcements</a><a href="#important-dates" style="color:oklch(0.7 0.01 290)">Important Dates</a><a href="#enquire" style="color:oklch(0.7 0.01 290)">Enquiry</a>
+        <a href="#gallery" style="color:oklch(0.7 0.01 290)">Gallery</a><a href="#announcements" style="color:oklch(0.7 0.01 290)">Announcements</a><a href="#enquire" style="color:oklch(0.7 0.01 290)">Enquiry</a>
       </div>
       <div style="min-width:0;border:1px solid oklch(0.28 0.04 290);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:16px">
         <div style="display:flex;gap:12px;align-items:flex-start">
@@ -1011,7 +1080,7 @@
         </div>
       </div>
     </div>
-    <div style="border-top:1px solid oklch(0.26 0.03 290);padding-top:20px;font-size:12.5px;color:oklch(0.55 0.01 290)">© 2026 OM Academy. All rights reserved.</div>
+    <div style="border-top:1px solid oklch(0.26 0.03 290);padding-top:20px;font-size:12.5px;color:oklch(0.55 0.01 290)">Â© 2026 OM Academy. All rights reserved.</div>
   </footer>
 </div>
 
@@ -1020,11 +1089,95 @@
 class Component extends DCLogic {
   renderVals() {
     const menuOpen = !!(this.state && this.state.menuOpen);
+
+    const galleryItems = [
+      { title: "OM Academy – Hisar Center", category: "INFRASTRUCTURE", categoryColor: "oklch(0.42 0.14 150)", date: "12 Mar 2026", location: "Hisar Center", src: "assets/om-academy-building.jpeg" },
+      { title: "Digital Marketing Workshop", category: "WORKSHOP", categoryColor: "oklch(0.4 0.16 255)", date: "18 Apr 2026", location: "Hisar Center", src: "https://images.unsplash.com/photo-1657812670261-7b76ba04525c?auto=format&fit=crop&w=1400&q=75" },
+      { title: "Computer Lab Training", category: "TRAINING", categoryColor: "oklch(0.42 0.14 150)", date: "05 Apr 2026", location: "Hansi Center", src: "https://images.unsplash.com/photo-1569653402334-2e98fbaa80ee?auto=format&fit=crop&w=1400&q=75" },
+      { title: "Certificate Distribution", category: "EVENT", categoryColor: "oklch(0.42 0.14 300)", date: "28 Mar 2026", location: "Hisar Center", src: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1400&q=75" },
+      { title: "Campus Placement Drive", category: "PLACEMENT", categoryColor: "oklch(0.5 0.16 40)", date: "10 May 2026", location: "Barwala Center", src: "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1400&q=75" },
+      { title: "Spoken English Class", category: "TRAINING", categoryColor: "oklch(0.42 0.14 150)", date: "22 Apr 2026", location: "Hisar Center", src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=75" },
+      { title: "Web Development Workshop", category: "WORKSHOP", categoryColor: "oklch(0.4 0.16 255)", date: "30 Apr 2026", location: "Hansi Center", src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=75" },
+      { title: "Hardware & Networking Lab", category: "TRAINING", categoryColor: "oklch(0.42 0.14 150)", date: "14 May 2026", location: "Barwala Center", src: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1400&q=75" },
+    ];
+    const lightboxOpen = !!(this.state && this.state.lightboxOpen);
+    const lightboxIndex = (this.state && typeof this.state.lightboxIndex === "number") ? this.state.lightboxIndex : 0;
+    const lightboxZoom = (this.state && this.state.lightboxZoom) || 1;
+    const lightboxExpanded = !!(this.state && this.state.lightboxExpanded);
+    const activeItem = galleryItems[lightboxIndex] || galleryItems[0];
+    const openLightboxAt = (i) => this.setState({ lightboxOpen: true, lightboxIndex: i, lightboxZoom: 1, lightboxExpanded: false });
+    const goToIndex = (i) => this.setState({ lightboxIndex: (i + galleryItems.length) % galleryItems.length, lightboxZoom: 1 });
+    const thumbBorder = (i) => (i === lightboxIndex ? "2px solid white" : "2px solid transparent");
+    const thumbOpacity = (i) => (i === lightboxIndex ? "1" : "0.55");
+    const enquiryOpen = !!(this.state && this.state.enquiryOpen);
+
     return {
       menuOpen: menuOpen,
       menuClosed: !menuOpen,
+      enquiryOpen: enquiryOpen,
+      openEnquiry: () => this.setState({ enquiryOpen: true }),
+      closeEnquiry: () => this.setState({ enquiryOpen: false }),
       navClass: menuOpen ? "nav-links open" : "nav-links",
       toggleMenu: () => this.setState({ menuOpen: !menuOpen }),
+
+      lightboxOpen: lightboxOpen,
+      lightboxClosed: !lightboxOpen,
+      lightboxIs0: lightboxIndex === 0,
+      lightboxIs1: lightboxIndex === 1,
+      lightboxIs2: lightboxIndex === 2,
+      lightboxIs3: lightboxIndex === 3,
+      lightboxIs4: lightboxIndex === 4,
+      lightboxIs5: lightboxIndex === 5,
+      lightboxIs6: lightboxIndex === 6,
+      lightboxIs7: lightboxIndex === 7,
+      lightboxTitle: activeItem.title,
+      lightboxCategory: activeItem.category,
+      lightboxCategoryColor: activeItem.categoryColor,
+      lightboxDate: activeItem.date,
+      lightboxLocation: activeItem.location,
+      lightboxCounter: (lightboxIndex + 1) + " / " + galleryItems.length,
+      lightboxImgTransform: "scale(" + lightboxZoom + ")",
+      lightboxOverlayPadding: lightboxExpanded ? "10px 12px" : "22px 28px",
+      lightboxStageMaxWidth: lightboxExpanded ? "100%" : "1180px",
+      openLightbox0: () => openLightboxAt(0),
+      openLightbox1: () => openLightboxAt(1),
+      openLightbox2: () => openLightboxAt(2),
+      openLightbox3: () => openLightboxAt(3),
+      openLightbox4: () => openLightboxAt(4),
+      openLightbox5: () => openLightboxAt(5),
+      openLightbox6: () => openLightboxAt(6),
+      openLightbox7: () => openLightboxAt(7),
+      closeLightbox: () => this.setState({ lightboxOpen: false }),
+      lightboxNext: () => goToIndex(lightboxIndex + 1),
+      lightboxPrev: () => goToIndex(lightboxIndex - 1),
+      zoomIn: () => this.setState({ lightboxZoom: Math.min(2, lightboxZoom + 0.5) }),
+      zoomOut: () => this.setState({ lightboxZoom: Math.max(1, lightboxZoom - 0.5) }),
+      toggleExpand: () => this.setState({ lightboxExpanded: !lightboxExpanded }),
+      lightboxThumb0: () => goToIndex(0),
+      lightboxThumb1: () => goToIndex(1),
+      lightboxThumb2: () => goToIndex(2),
+      lightboxThumb3: () => goToIndex(3),
+      lightboxThumb4: () => goToIndex(4),
+      lightboxThumb5: () => goToIndex(5),
+      lightboxThumb6: () => goToIndex(6),
+      lightboxThumb7: () => goToIndex(7),
+      thumbBorder0: thumbBorder(0),
+      thumbBorder1: thumbBorder(1),
+      thumbBorder2: thumbBorder(2),
+      thumbBorder3: thumbBorder(3),
+      thumbBorder4: thumbBorder(4),
+      thumbBorder5: thumbBorder(5),
+      thumbBorder6: thumbBorder(6),
+      thumbBorder7: thumbBorder(7),
+      thumbOpacity0: thumbOpacity(0),
+      thumbOpacity1: thumbOpacity(1),
+      thumbOpacity2: thumbOpacity(2),
+      thumbOpacity3: thumbOpacity(3),
+      thumbOpacity4: thumbOpacity(4),
+      thumbOpacity5: thumbOpacity(5),
+      thumbOpacity6: thumbOpacity(6),
+      thumbOpacity7: thumbOpacity(7),
+
       heroStats: [
         { n: "12+", label: "Recognized Certifications" },
         { n: "500+", label: "Students Trained" },
@@ -1069,38 +1222,6 @@ class Component extends DCLogic {
         { n: "2", bg: "white", color: "var(--ink-soft)" },
         { n: "3", bg: "white", color: "var(--ink-soft)" },
       ],
-      dateFilters: [
-        { label: "All Dates", active: "oklch(0.42 0.14 150)", color: "white" },
-        { label: "Admissions", active: "white", color: "var(--ink-soft)" },
-        { label: "Exams", active: "white", color: "var(--ink-soft)" },
-        { label: "Scholarship", active: "white", color: "var(--ink-soft)" },
-        { label: "Events", active: "white", color: "var(--ink-soft)" },
-        { label: "Holidays", active: "white", color: "var(--ink-soft)" },
-      ],
-      weekdays: ["S", "M", "T", "W", "T", "F", "S"],
-      // Aug 2026 starts on a Saturday: 6 blank cells before the 1st.
-      calendarDays: (() => {
-        const day = (n, dotColor, selected) => ({
-          day: n,
-          hasDot: !!dotColor,
-          dotColor: dotColor || "",
-          selected: selected ? "oklch(0.42 0.14 150)" : "oklch(0.93 0.006 90)",
-          opacity: n < 1 || n > 31 ? 0.35 : 1,
-        });
-        return [
-          day(-5, null, false), day(-4, null, false), day(-3, null, false), day(-2, null, false), day(-1, null, false), day(0, null, false), day(1, null, false),
-          day(2, null, false), day(3, null, false), day(4, null, false), day(5, null, false), day(6, null, false), day(7, null, false), day(8, null, false),
-          day(9, null, false), day(10, null, false), day(11, null, false), day(12, "oklch(0.5 0.16 40)", false), day(13, null, false), day(14, null, false), day(15, "oklch(0.4 0.16 255)", false),
-          day(16, null, false), day(17, null, false), day(18, null, false), day(19, null, false), day(20, null, false), day(21, null, false), day(22, null, false),
-          day(23, "oklch(0.42 0.14 150)", true), day(24, null, false), day(25, "oklch(0.42 0.14 150)", false), day(26, null, false), day(27, null, false), day(28, null, false), day(29, null, false),
-        ];
-      })(),
-      importantDates: [
-        { day: "23", month: "AUG", title: "Last Date to Submit Scholarship Form", time: "11:59 PM" },
-        { day: "25", month: "AUG", title: "New Batch Classes Commence", time: "All Day" },
-        { day: "31", month: "AUG", title: "Last Date for Admission (Current Batch)", time: "11:59 PM" },
-        { day: "05", month: "SEP", title: "Orientation Program", time: "10:00 AM" },
-      ],
       galleryFilters: [
         { label: "All", active: "var(--violet)", color: "white" },
         { label: "Events", active: "white", color: "var(--ink-soft)" },
@@ -1111,11 +1232,11 @@ class Component extends DCLogic {
         { label: "Infrastructure", active: "white", color: "var(--ink-soft)" },
       ],
       trustBadges: [
-        { title: "✓ Trusted & Recognized" },
-        { title: "✓ Expert Faculty" },
-        { title: "✓ Modern Infrastructure" },
-        { title: "✓ Placement Assistance" },
-        { title: "✓ Student Support" },
+        { title: "âœ“ Trusted & Recognized" },
+        { title: "âœ“ Expert Faculty" },
+        { title: "âœ“ Modern Infrastructure" },
+        { title: "âœ“ Placement Assistance" },
+        { title: "âœ“ Student Support" },
       ],
       avatars: ["AK", "KD", "RG", "AD", "+1K"],
     };
@@ -1125,3 +1246,4 @@ class Component extends DCLogic {
 </script>
 </body>
 </html>
+
