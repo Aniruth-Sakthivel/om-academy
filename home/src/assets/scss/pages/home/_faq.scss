@@ -1,0 +1,13 @@
+/*====== FAQ ======*/
+
+// Items use components/_accordion.scss; this is the section's decorative star.
+.faq-splash {
+  top: 60px;
+  right: 40px;
+  width: 110px;
+  height: 110px;
+
+  path {
+    fill: oklch(0.42 0.15 265 / 0.14);
+  }
+}

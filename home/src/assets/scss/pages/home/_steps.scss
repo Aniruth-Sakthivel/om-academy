@@ -1,0 +1,133 @@
+@use "../../utils/variables" as *;
+@use "../../utils/mixins" as *;
+/*====== Steps (Admission & Career process) ======*/
+
+.steps-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.step {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
+}
+
+.step-card {
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 24px 16px 22px;
+  background: $white;
+  text-align: center;
+  position: relative;
+  min-width: 0;
+  flex: 1;
+}
+
+.step-card-lg {
+  padding: 28px 16px;
+}
+
+.step-icon {
+  border-radius: 50%;
+  margin: 0 auto 14px;
+}
+
+// Numbered brand circle (Admission)
+.step-icon-brand {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background: $primary-gradient;
+  color: $white;
+}
+
+// Tone circle (Career)
+.step-icon-tone {
+  width: 56px;
+  height: 56px;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+.step-num {
+  @include flex-center;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: $success;
+  color: $white;
+  font-size: 10px;
+  font-weight: 800;
+  border: 2px solid $white;
+}
+
+.step-title {
+  @include title-font(700);
+  font-size: 15.5px;
+  margin-bottom: 8px;
+  color: $ink;
+}
+
+.step-desc {
+  font-size: 13.5px;
+  color: $ink-soft;
+  line-height: 1.5;
+}
+
+// Dashed connector between steps
+.step-link {
+  width: 22px;
+  height: 2px;
+  align-self: center;
+  background: repeating-linear-gradient(90deg, $primary 0 6px, transparent 6px 10px);
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+@include respond-between(sm, md) {
+  .steps-row {
+    flex-wrap: wrap;
+    gap: 16px;
+
+    > .step {
+      flex: 1 1 calc(50% - 8px);
+    }
+  }
+
+  .step-link {
+    display: none;
+  }
+}
+
+@include respond-below(sm) {
+  .steps-row {
+    flex-direction: column;
+    gap: 14px;
+
+    .step-card {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      column-gap: 14px;
+      text-align: left;
+      padding: 16px;
+      align-items: start;
+    }
+
+    .step-icon {
+      grid-row: span 2;
+      margin: 0;
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .step-link {
+    display: none;
+  }
+}

@@ -1,0 +1,74 @@
+@use "../utils/variables" as *;
+@use "../utils/mixins" as *;
+/*============================
+  10. Cards
+============================*/
+
+.card-lift {
+  transition: transform 0.25s, box-shadow 0.25s;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-card-hover;
+  }
+}
+
+.icon-tile {
+  @include flex-center;
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+
+.card-lift:hover .icon-tile {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+// Grid layouts. Columns collapse at md (900px) and sm (640px).
+.grid-3,
+.grid-4,
+.grid-5 {
+  display: grid;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@include respond-below(md) {
+  .grid-3,
+  .grid-4,
+  .grid-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include respond-below(sm) {
+  .grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grid-4,
+  .grid-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .grid-5 > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .grid-3 > .card-lift {
+    padding: 20px;
+  }
+}

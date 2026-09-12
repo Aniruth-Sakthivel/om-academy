@@ -1,0 +1,10 @@
+/*============================
+  15. Decorations
+============================*/
+
+// Absolutely positioned decorative SVGs (hero wave, testimonial bubble, FAQ star).
+// A class that sets opacity overrides an SVG opacity attribute, so per-use opacity lives in the modifier class.
+.splash {
+  position: absolute;
+  opacity: 0.9;
+}

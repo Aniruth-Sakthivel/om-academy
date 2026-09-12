@@ -1,0 +1,374 @@
+@use "../utils/variables" as *;
+@use "../utils/mixins" as *;
+/*============================
+  18. Header & Drawer
+============================*/
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: oklch(0.99 0.002 90 / 0.95);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-bottom: 1px solid $border-strong;
+  box-shadow: 0 8px 24px -18px oklch(0.2 0.03 264 / 0.35);
+}
+
+.header-inner {
+  max-width: $container-max;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 32px;
+  flex-wrap: wrap;
+}
+
+// Brand
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  @include link-color(inherit);
+}
+
+.brand-mark {
+  @include flex-center;
+  @include title-font(700);
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  background: $primary-gradient;
+  color: $white;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  min-width: 0;
+}
+
+.brand-name {
+  @include title-font(700);
+  font-size: 19px;
+  color: $ink;
+  line-height: 1.1;
+
+  span {
+    color: $primary;
+  }
+}
+
+.brand-tag {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: $ink-soft;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+// Nav
+.nav-links {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-weight: 500;
+  font-size: 14.5px;
+  color: $ink;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding: 9px 14px;
+  border-radius: $radius-pill;
+  color: $ink;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: $primary-tint;
+    color: $primary;
+  }
+
+  &.active,
+  &.active:hover {
+    background: $primary-tint;
+    color: $primary-dark;
+    font-weight: 600;
+  }
+}
+
+.btn-nav {
+  padding: 11px 22px;
+  font-size: 14.5px;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: $ink;
+  flex-shrink: 0;
+
+  .icon-close {
+    display: none;
+  }
+
+  &[aria-expanded="true"] {
+    .icon-menu {
+      display: none;
+    }
+
+    .icon-close {
+      display: inline;
+    }
+  }
+}
+
+// Drawer-only parts (shown below the nav breakpoint)
+.nav-backdrop,
+.nav-quick,
+.nav-ico,
+.drawer-head,
+.drawer-spacer,
+.drawer-note {
+  display: none;
+}
+
+.drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.drawer-mark {
+  @include flex-center;
+  @include title-font(700);
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: $primary-gradient;
+  color: $white;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.drawer-brand-text {
+  min-width: 0;
+}
+
+.drawer-title {
+  @include title-font(700);
+  font-size: 15.5px;
+  color: $ink;
+  line-height: 1.2;
+}
+
+.drawer-sub {
+  font-size: 12px;
+  color: $ink-soft;
+}
+
+// Below 1180px the nav becomes an off-canvas drawer that slides in from the right.
+// The header drops its backdrop-filter here: a filtered ancestor becomes the containing
+// block for position:fixed children and would trap the drawer inside the header bar.
+@include respond-below(nav) {
+  .site-header {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: $page-bg;
+  }
+
+  .header-inner {
+    flex-wrap: nowrap;
+  }
+
+  .hamburger {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: $radius-lg;
+    border: none;
+    background: $primary-tint;
+    color: $primary-dark;
+    transition: background 0.2s;
+
+    &:hover {
+      background: oklch(0.91 0.05 264);
+    }
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    width: min(88vw, 360px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 0 16px 20px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: $white;
+    border-radius: 24px 0 0 24px;
+    box-shadow: -24px 0 60px -20px oklch(0.2 0.06 264 / 0.45);
+    transform: translateX(105%);
+    visibility: hidden;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.32s;
+
+    &.open {
+      transform: none;
+      visibility: visible;
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .nav-link {
+      width: 100%;
+      gap: 12px;
+      padding: 9px 10px;
+      border-radius: $radius-lg;
+      font-size: 15.5px;
+      font-weight: 600;
+
+      &::after {
+        content: "";
+        width: 7px;
+        height: 7px;
+        margin-left: auto;
+        border-top: 2px solid currentColor;
+        border-right: 2px solid currentColor;
+        transform: rotate(45deg);
+        opacity: 0.35;
+        flex-shrink: 0;
+      }
+    }
+
+    .btn-pill {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: 0 -16px 8px;
+    padding: 16px 16px 14px;
+    background: $white;
+    border-bottom: 1px solid $border-soft;
+  }
+
+  .drawer-close {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    border: 1px solid $border-strong;
+    background: $white;
+    color: $ink;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .nav-ico {
+    @include flex-center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: oklch(0.97 0.006 264);
+    color: $primary;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-link.active .nav-ico {
+    background: $primary-gradient;
+    color: $white;
+  }
+
+  .drawer-spacer {
+    display: block;
+    flex: 1 0 18px;
+  }
+
+  .nav-quick {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px;
+      border-radius: $radius-md;
+      background: oklch(0.97 0.004 90);
+      border: 1px solid $border;
+      @include link-color($ink);
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  .drawer-note {
+    display: block;
+    margin: 14px 4px 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: $ink-soft;
+    text-align: center;
+  }
+
+  // Inside the header so it also dims the header bar (stacks below the drawer: z-index 1 vs 2)
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: oklch(0.15 0.03 264 / 0.45);
+    animation: fadeIn 0.25s ease-out;
+  }
+}
+
+@include respond-below(sm) {
+  .header-inner {
+    padding: 10px $section-pad-x-sm;
+  }
+}
+
+@include respond-below(xs) {
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .brand-name {
+    font-size: 17px;
+  }
+
+  .brand-tag {
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+  }
+}

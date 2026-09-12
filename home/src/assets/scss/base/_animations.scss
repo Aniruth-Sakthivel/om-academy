@@ -1,0 +1,43 @@
+/*============================
+  4. Animations
+============================*/
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(6deg); }
+}
+
+@keyframes floatSlow2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(12px) rotate(-8deg); }
+}
+
+@keyframes pulseRing {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Fade-up entrance
+.fu {
+  animation: fadeUp 0.8s ease-out both;
+}
+
+// Stagger delays for .fu items: .delay-80 = 80ms (gallery cards use multiples of 60).
+@each $ms in (50, 60, 80, 100, 120, 150, 160, 180, 200, 240, 300, 320, 360, 400, 420) {
+  .delay-#{$ms} {
+    animation-delay: #{$ms}ms;
+  }
+}
+
+.float-slow { animation: floatSlow 8s ease-in-out infinite; }
+.float-slow-2 { animation: floatSlow2 9s ease-in-out infinite; }

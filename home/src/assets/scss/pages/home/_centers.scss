@@ -1,0 +1,70 @@
+@use "../../utils/variables" as *;
+@use "../../utils/mixins" as *;
+/*====== Centers ======*/
+
+.center-card {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 24px;
+  min-width: 0;
+}
+
+.center-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.center-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: $radius;
+  background: $primary-tint;
+  color: $primary;
+}
+
+.center-name {
+  @include title-font(700);
+  font-size: 16px;
+  color: $ink;
+}
+
+.center-address {
+  font-size: 13px;
+  color: $ink-soft;
+  margin-top: 2px;
+}
+
+.center-card .chip-list {
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.center-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px solid $border-soft;
+  padding-top: 14px;
+}
+
+.center-phone {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $ink-soft;
+  font-size: 12px;
+}
+
+.center-link {
+  font-weight: 600;
+  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  @include link-color($primary);
+}

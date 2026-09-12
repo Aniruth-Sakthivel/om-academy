@@ -1,0 +1,80 @@
+@use "../utils/variables" as *;
+@use "../utils/mixins" as *;
+/*============================
+  6. Buttons
+============================*/
+
+.btn-pill {
+  border-radius: $radius-pill;
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  svg {
+    transition: transform 0.2s;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+
+    svg {
+      transform: translateX(3px);
+    }
+  }
+}
+
+button.btn-pill {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: $primary-gradient;
+  color: $white;
+  box-shadow: $shadow-primary;
+
+  &:hover {
+    color: $white;
+    background: $primary-dark;
+  }
+}
+
+.btn-ghost {
+  background: $white;
+  color: $ink;
+  border: 1.5px solid oklch(0.88 0.01 264);
+
+  &:hover {
+    color: $ink;
+    border-color: $primary;
+  }
+}
+
+// White pill on a brand background (CTA card, pinned notice)
+.btn-white {
+  background: $white;
+  @include link-color($primary);
+}
+
+// Outline pill on the hero photo
+.btn-outline-light {
+  border: 1.5px solid oklch(0.95 0.01 260 / 0.5);
+  @include link-color($white);
+}
+
+.btn-sm {
+  padding: 11px 20px;
+  font-size: 14px;
+}
+
+// Trailing arrow icon in a pill button or inline link
+.icon-arrow {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-left: 2px;
+  flex-shrink: 0;
+}

@@ -1,0 +1,65 @@
+@use "../../utils/variables" as *;
+@use "../../utils/mixins" as *;
+/*====== Courses (learning categories) ======*/
+
+.courses-grid {
+  position: relative;
+}
+
+.course-card {
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  background: $white;
+
+  .badge {
+    margin-top: -6px;
+  }
+}
+
+.course-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: $radius-lg;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+.course-title {
+  @include title-font(700);
+  font-size: 17px;
+  color: $ink;
+}
+
+.course-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: $ink-soft;
+  flex: 1;
+}
+
+.course-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid $border-soft;
+}
+
+.course-count {
+  font-size: 13px;
+  color: $ink-soft;
+}
+
+.course-link {
+  font-weight: 600;
+  font-size: 13.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  @include link-color(var(--tone-fg));
+}

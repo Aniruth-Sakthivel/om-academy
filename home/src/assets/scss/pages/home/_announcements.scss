@@ -1,0 +1,372 @@
+@use "../../utils/variables" as *;
+@use "../../utils/mixins" as *;
+/*====== Announcements (notice board) ======*/
+
+.ann-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.ann-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 20px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.ann-search {
+  position: relative;
+  display: block;
+  flex: 1 1 260px;
+  max-width: 340px;
+  margin: 0;
+
+  input {
+    height: 42px;
+    padding: 0 16px 0 40px;
+    border-radius: $radius-pill;
+    border-color: oklch(0.88 0.01 264);
+  }
+}
+
+.ann-search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $ink-soft;
+  pointer-events: none;
+}
+
+// Latest notice pinned on the left, earlier notices as a dated list on the right
+.ann-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.ann-pinned {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius-xl;
+  padding: 30px;
+  color: $white;
+  background: linear-gradient(160deg, oklch(0.4 0.14 265) 0%, oklch(0.3 0.11 265) 100%);
+  box-shadow: 0 24px 48px -28px oklch(0.32 0.12 265 / 0.6);
+  min-width: 0;
+}
+
+.ann-pinned-dots {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  background-image: radial-gradient(oklch(0.98 0.01 264 / 0.08) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+  pointer-events: none;
+}
+
+.ann-pinned-body {
+  position: relative;
+}
+
+.ann-pinned-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.ann-pinned-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: oklch(0.86 0.04 264);
+}
+
+.ann-pinned-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: $radius-pill;
+  background: var(--tone-fg);
+  color: $white;
+}
+
+.ann-pinned-date {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.ann-day {
+  @include title-font(700);
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ann-pinned-month {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: oklch(0.86 0.04 264);
+}
+
+.ann-pinned-title {
+  @include title-font(700);
+  font-size: 21px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+
+.ann-pinned-desc {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: oklch(0.88 0.02 264);
+  margin: 0 0 26px;
+}
+
+.ann-ask {
+  @include link-color($primary-dark);
+}
+
+.ann-list {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.ann-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid $border-soft;
+  background: $surface-soft;
+}
+
+.ann-list-title {
+  @include title-font(700);
+  font-size: 15px;
+  margin: 0;
+  color: $ink;
+}
+
+.ann-list-count {
+  font-size: 12.5px;
+  color: $ink-soft;
+}
+
+.ann-row {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px 20px;
+  transition: background 0.2s;
+
+  & + & {
+    border-top: 1px solid $border-soft;
+  }
+
+  &:hover {
+    background: oklch(0.985 0.006 264);
+  }
+}
+
+.ann-date {
+  text-align: center;
+  border-radius: $radius-md;
+  padding: 9px 4px;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+.ann-date-day {
+  @include title-font(700);
+  font-size: 21px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ann-date-month {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+.ann-row-body {
+  min-width: 0;
+}
+
+.ann-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+  font-size: 11.5px;
+}
+
+.ann-tag {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--tone-fg);
+}
+
+.ann-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: oklch(0.75 0.01 264);
+}
+
+.ann-meta-date {
+  color: $ink-soft;
+}
+
+.ann-row-title {
+  font-weight: 700;
+  font-size: 15.5px;
+  line-height: 1.35;
+  margin: 0 0 4px;
+  color: $ink;
+}
+
+.ann-row-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: $ink-soft;
+  margin: 0;
+}
+
+.ann-row-ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ann-only {
+  padding: 32px 20px;
+  text-align: center;
+  font-size: 13.5px;
+  color: $ink-soft;
+}
+
+.ann-empty {
+  text-align: center;
+  padding: 40px 20px;
+  border: 1px dashed oklch(0.86 0.02 264);
+  border-radius: $radius-xl;
+  background: $white;
+}
+
+.ann-empty-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: $ink;
+  margin-bottom: 6px;
+}
+
+.ann-empty-text {
+  font-size: 14px;
+  color: $ink-soft;
+  margin: 0 0 18px;
+}
+
+// WhatsApp subscribe strip
+.ann-subscribe {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  flex-wrap: wrap;
+  padding: 18px 22px;
+  border-radius: 16px;
+  background: $primary-tint;
+  border: 1px solid oklch(0.9 0.04 264);
+}
+
+.ann-subscribe-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1 1 320px;
+}
+
+.ann-subscribe-icon {
+  @include flex-center;
+  width: 42px;
+  height: 42px;
+  border-radius: $radius-md;
+  background: $white;
+  color: $primary;
+  flex-shrink: 0;
+}
+
+.ann-subscribe-text {
+  min-width: 0;
+}
+
+.ann-subscribe-title {
+  font-weight: 700;
+  font-size: 14.5px;
+  color: $ink;
+}
+
+.ann-subscribe-sub {
+  font-size: 13px;
+  color: $ink-soft;
+  line-height: 1.5;
+}
+
+@include respond-below(md) {
+  .ann-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@include respond-below(sm) {
+  .ann-search {
+    max-width: none;
+    flex-basis: 100%;
+  }
+
+  .ann-row {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .ann-pinned {
+    padding: 22px;
+
+    .ann-day {
+      font-size: 42px;
+    }
+  }
+
+  .ann-subscribe .btn-pill {
+    width: 100%;
+    justify-content: center;
+  }
+}

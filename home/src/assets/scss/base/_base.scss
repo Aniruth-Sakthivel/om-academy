@@ -1,0 +1,51 @@
+@use "../utils/variables" as *;
+/*============================
+  3. Base
+============================*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: 92px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: $page-bg;
+  font-family: $font-family-primary;
+  color: $ink;
+  overflow-x: hidden;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+
+  &:hover {
+    color: $primary-dark;
+  }
+}
+
+h1 {
+  letter-spacing: -0.025em;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+// Page wrapper. overflow-x:clip (not hidden) so the sticky header keeps working.
+.main-wrapper {
+  max-width: $container-max;
+  margin: 0 auto;
+  overflow-x: clip;
+}
+
+main {
+  outline: none;
+}
