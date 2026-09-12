@@ -1,0 +1,35 @@
+/*
+Author       : OM Academy
+Description  : Main stylesheet for the OM Academy website (compiled by Vite)
+*/
+
+/****** Utils ******/
+@use "utils/variables";
+@use "utils/mixins";
+
+/******* Base *******/
+@use "base/base";
+@use "base/animations";
+@use "base/accessibility";
+
+/******* Components ******/
+@use "components/tones";
+@use "components/button";
+@use "components/eyebrow";
+@use "components/chip";
+@use "components/card";
+@use "components/decor";
+@use "components/tabs";
+@use "components/form";
+@use "components/section-head";
+@use "components/accordion";
+@use "components/modal";
+@use "components/lightbox";
+
+/****** Layout ******/
+@use "layout/header";
+@use "layout/section";
+@use "layout/footer";
+
+/******* Pages ******/
+@use "pages/home";

@@ -1,0 +1,40 @@
+@use "../utils/variables" as *;
+/*============================
+  7. Eyebrow (section label)
+============================*/
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-family-primary;
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $primary-dark;
+  background: $primary-tint;
+  border: 1px solid oklch(0.88 0.05 264);
+  padding: 6px 14px;
+  border-radius: $radius-pill;
+  margin-bottom: 14px;
+
+  &::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $primary-gradient;
+    flex-shrink: 0;
+  }
+}
+
+.eyebrow-light {
+  background: oklch(1 0 0 / 0.1);
+  border-color: oklch(1 0 0 / 0.24);
+  color: $white;
+
+  &::before {
+    background: $highlight;
+  }
+}

@@ -1,0 +1,43 @@
+<!-- Start Gallery Lightbox: pages through the currently filtered photos -->
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden data-lightbox>
+    <div class="lb-stage">
+
+        <div class="lb-top">
+            <div class="lb-counter" data-lb-counter></div>
+            <div class="lb-title-center" data-lb-title></div>
+            <div class="lb-actions">
+                <button type="button" class="lb-icon-btn" data-lb-zoom-out aria-label="Zoom out">
+                    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
+                </button>
+                <button type="button" class="lb-icon-btn" data-lb-zoom-in aria-label="Zoom in">
+                    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+                <button type="button" class="lb-icon-btn" data-lb-expand aria-label="Toggle expanded view">
+                    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
+                </button>
+                <button type="button" class="lb-icon-btn" data-lb-close aria-label="Close photo viewer">
+                    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="lb-main">
+            <button type="button" class="lb-arrow-btn lb-prev" data-lb-prev aria-label="Previous photo">
+                <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <img class="lb-img" data-lb-img src="assets/img/om-academy-building.jpeg" alt="" loading="lazy" decoding="async">
+            <button type="button" class="lb-arrow-btn lb-next" data-lb-next aria-label="Next photo">
+                <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+        </div>
+
+        <div class="lb-caption">
+            <span class="lb-tag" data-lb-tag></span>
+            <span class="lb-caption-title" data-lb-caption-title></span>
+            <span class="lb-caption-note" data-lb-caption></span>
+        </div>
+
+        <div class="lb-thumbs" data-lb-thumbs></div>
+    </div>
+</div>
+<!-- End Gallery Lightbox -->

@@ -1,0 +1,77 @@
+/*============================
+  1. Variables
+============================*/
+
+// Font Family
+$font-family-title: "Poppins", sans-serif;
+$font-family-primary: "Inter", sans-serif;
+
+// Brand tokens. Solid brand backgrounds use --primary-gradient; text, borders and icons use --primary.
+:root {
+  --ink: oklch(0.2 0.03 264);
+  --ink-soft: oklch(0.5 0.02 264);
+  --primary: oklch(0.42 0.15 265);
+  --primary-dark: oklch(0.32 0.12 265);
+  --primary-gradient: linear-gradient(165deg, oklch(0.42 0.15 265) 0%, oklch(0.32 0.12 265) 100%);
+  --primary-tint: oklch(0.95 0.028 265);
+  --primary-bg: oklch(0.965 0.015 265);
+  --gold: oklch(0.5 0.16 40);
+  --accent: oklch(0.72 0.19 150);
+}
+
+// Theme Colors Variables
+$ink: var(--ink);
+$ink-soft: var(--ink-soft);
+$primary: var(--primary);
+$primary-dark: var(--primary-dark);
+$primary-gradient: var(--primary-gradient);
+$primary-tint: var(--primary-tint);
+$primary-bg: var(--primary-bg);
+$gold: var(--gold);
+$accent: var(--accent);
+$white: white;
+
+// Neutrals (warm hue 90 for surfaces, brand hue 264 for tinted neutrals)
+$page-bg: oklch(0.99 0.002 90);
+$surface-alt: oklch(0.97 0.004 90);
+$surface-soft: oklch(0.985 0.003 90);
+$chip-bg: oklch(0.96 0.004 90);
+$border: oklch(0.91 0.006 90);
+$border-strong: oklch(0.9 0.006 90);
+$border-soft: oklch(0.93 0.006 90);
+$border-input: oklch(0.87 0.006 90);
+$icon-muted: oklch(0.65 0.006 90);
+$success: oklch(0.42 0.14 150);
+$danger: oklch(0.58 0.2 25);
+$highlight: oklch(0.78 0.16 90);
+$footer-bg: oklch(0.21 0.06 265);
+
+// Radius
+$radius-sm: 8px;
+$radius: 10px;
+$radius-md: 12px;
+$radius-lg: 14px;
+$radius-xl: 18px;
+$radius-pill: 100px;
+
+// Shadows
+$shadow-card-hover: 0 20px 40px -20px oklch(0.2 0.05 264 / 0.4);
+$shadow-primary: 0 12px 24px -10px oklch(0.42 0.15 265 / 0.5);
+
+// Layout
+$container-max: 1440px;
+$section-pad-y: 56px;
+$section-pad-x: 32px;
+$section-pad-x-sm: 20px;
+
+// Tone pairs (tint background, strong foreground) shared by course cards, badges, notices and photo tags.
+// Components read them through the .tone-* classes (components/_tones.scss) as --tone-bg / --tone-fg.
+// Keys are quoted so Sass doesn't read blue/green/purple/navy as colour values.
+$tones: (
+  "blue": (bg: oklch(0.94 0.03 255), fg: oklch(0.4 0.16 255)),
+  "green": (bg: oklch(0.94 0.04 150), fg: oklch(0.42 0.14 150)),
+  "purple": (bg: oklch(0.94 0.03 300), fg: oklch(0.42 0.14 300)),
+  "navy": (bg: oklch(0.94 0.03 265), fg: oklch(0.38 0.12 265)),
+  "amber": (bg: oklch(0.95 0.04 60), fg: oklch(0.5 0.16 40)),
+  "rust": (bg: oklch(0.94 0.03 30), fg: oklch(0.48 0.15 30)),
+);

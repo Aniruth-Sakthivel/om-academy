@@ -1,0 +1,35 @@
+@use "../utils/variables" as *;
+/*============================
+  9. Chips & Badges
+============================*/
+
+.chip-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 12px;
+  background: $chip-bg;
+  border: 1px solid $border-strong;
+  border-radius: $radius-pill;
+  padding: 4px 10px;
+  color: $ink-soft;
+}
+
+.chip-sm {
+  font-size: 11px;
+  padding: 3px 9px;
+}
+
+// Tone-coloured pill label (reads --tone-bg / --tone-fg from a .tone-* ancestor or itself)
+.badge {
+  align-self: flex-start;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+  border-radius: $radius-pill;
+  padding: 4px 12px;
+}

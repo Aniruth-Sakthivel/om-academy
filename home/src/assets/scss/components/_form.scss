@@ -1,0 +1,60 @@
+@use "../utils/variables" as *;
+/*============================
+  12. Forms
+============================*/
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: $ink;
+  margin-bottom: 6px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  font-size: 14px;
+  font-family: $font-family-primary;
+  padding: 11px 13px;
+  border-radius: $radius-sm;
+  border: 1px solid $border-input;
+  background: $white;
+  color: $ink;
+
+  &:focus {
+    outline: 2px solid oklch(0.42 0.15 265 / 0.4);
+  }
+}
+
+.req {
+  color: $danger;
+  margin-left: 2px;
+}
+
+// Field with a leading icon
+.input-icon {
+  position: relative;
+
+  > .input-icon-glyph {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $icon-muted;
+    display: flex;
+    pointer-events: none;
+  }
+
+  input,
+  select,
+  textarea {
+    padding-left: 36px;
+  }
+}
+
+.input-icon-top > .input-icon-glyph {
+  top: 14px;
+  transform: none;
+}

@@ -1,0 +1,201 @@
+@use "../../utils/variables" as *;
+@use "../../utils/mixins" as *;
+/*====== Hero ======*/
+
+.hero {
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  padding: 72px $section-pad-x;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  z-index: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, oklch(0.24 0.09 265 / 0.93) 0%, oklch(0.3 0.11 265 / 0.78) 45%, oklch(0.34 0.1 265 / 0.45) 100%);
+  z-index: 1;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.hero-orb-1 {
+  top: -40px;
+  right: -40px;
+  width: 220px;
+  height: 220px;
+  background: oklch(0.55 0.15 264 / 0.22);
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.hero-orb-2 {
+  bottom: -50px;
+  right: 120px;
+  width: 140px;
+  height: 140px;
+  background: oklch(0.6 0.16 40 / 0.18);
+  animation: floatSlow2 9s ease-in-out infinite;
+}
+
+.hero-ring {
+  position: absolute;
+  top: 24px;
+  left: -30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid oklch(0.98 0.01 264 / 0.25);
+  animation: pulseRing 5s ease-in-out infinite;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  min-width: 0;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: oklch(0.98 0.01 264 / 0.16);
+  border: 1px solid oklch(0.98 0.01 264 / 0.35);
+  color: $white;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: $radius-pill;
+  margin-bottom: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.hero-title {
+  @include title-font(800);
+  font-size: clamp(32px, 4.2vw, 52px);
+  line-height: 1.12;
+  margin: 0 0 20px;
+  color: $white;
+
+  span {
+    color: $highlight;
+  }
+}
+
+.hero-lead {
+  font-size: 17px;
+  line-height: 1.65;
+  color: oklch(0.92 0.01 260);
+  margin: 0 0 32px;
+  max-width: 500px;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 40px;
+  max-width: 420px;
+}
+
+.hero-stat-n {
+  @include title-font(800);
+  font-size: 26px;
+  color: $white;
+}
+
+.hero-stat-label {
+  font-size: 13px;
+  color: oklch(0.85 0.02 260);
+}
+
+.hero-badge {
+  position: absolute;
+  bottom: 28px;
+  right: 32px;
+  background: $white;
+  border-radius: $radius-lg;
+  padding: 14px 18px;
+  box-shadow: 0 12px 30px -10px oklch(0.2 0.02 260 / 0.35);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.hero-badge-icon {
+  @include flex-center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $primary-tint;
+  color: $primary;
+  flex-shrink: 0;
+}
+
+.hero-badge-title {
+  @include title-font(800);
+  font-size: 15px;
+  color: $ink;
+  line-height: 1.1;
+}
+
+.hero-badge-sub {
+  font-size: 11px;
+  color: $ink-soft;
+}
+
+.hero-wave {
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  z-index: 2;
+
+  path {
+    fill: $page-bg;
+  }
+}
+
+@include respond-below(sm) {
+  .hero {
+    min-height: auto;
+    padding: 56px $section-pad-x-sm 72px;
+  }
+
+  .hero-content {
+    margin-bottom: 28px;
+  }
+
+  .hero-badge {
+    display: none;
+  }
+
+  .hero-ctas > a {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,44 @@
+@use "sass:map";
+/*============================
+  2. Mixins
+============================*/
+
+// Breakpoints. nav: the seven nav links + logo need ~1160px, so the header collapses to the drawer below 1180px.
+$breakpoints: (
+  xs: 380px,
+  sm: 640px,
+  md: 900px,
+  nav: 1180px,
+);
+
+@mixin respond-below($breakpoint) {
+  @media (max-width: map.get($breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+@mixin respond-between($lower, $upper) {
+  @media (min-width: map.get($breakpoints, $lower) + 1) and (max-width: map.get($breakpoints, $upper)) {
+    @content;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Anchors that carry their own colour keep it on hover (the global a:hover would otherwise win).
+@mixin link-color($color) {
+  color: $color;
+
+  &:hover {
+    color: $color;
+  }
+}
+
+@mixin title-font($weight: 700) {
+  font-family: "Poppins", sans-serif;
+  font-weight: $weight;
+}

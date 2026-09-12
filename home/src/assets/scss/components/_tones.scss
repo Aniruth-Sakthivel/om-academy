@@ -1,0 +1,13 @@
+@use "sass:map";
+@use "../utils/variables" as *;
+/*============================
+  8. Tones
+============================*/
+
+// .tone-blue, .tone-green … set --tone-bg / --tone-fg for the element and its children.
+@each $name, $tone in $tones {
+  .tone-#{$name} {
+    --tone-bg: #{map.get($tone, bg)};
+    --tone-fg: #{map.get($tone, fg)};
+  }
+}

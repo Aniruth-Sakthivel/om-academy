@@ -1,0 +1,513 @@
+@use "../utils/variables" as *;
+@use "../utils/mixins" as *;
+/*============================
+  16. Enquiry Modal
+============================*/
+
+// Blue left panel with six white tiles, the building photo fading up into the blue at the bottom,
+// and a curved right edge with a green stroke. At md the photo moves to a right-hand column; at sm it is a 300px band.
+
+.enq-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  background: oklch(0.15 0.02 264 / 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+
+.enq-dialog {
+  position: relative;
+  max-width: 1080px;
+  width: 100%;
+  margin: auto;
+}
+
+.enq-close {
+  @include flex-center;
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $white;
+  border: 2px solid $primary;
+  box-shadow: 0 6px 16px -6px oklch(0.2 0.05 265 / 0.45);
+  cursor: pointer;
+  color: $primary;
+}
+
+.enq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 0;
+  border: 1px solid $border;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px -20px oklch(0.1 0.02 260 / 0.5);
+}
+
+// Left panel
+.enq-aside {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  padding: 28px 46px 0 28px;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  background: $primary-gradient;
+}
+
+.enq-brand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.enq-brand-mark {
+  @include flex-center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: oklch(0.98 0.01 255 / 0.12);
+  border: 1.5px solid oklch(0.7 0.14 90 / 0.6);
+  color: $highlight;
+  flex-shrink: 0;
+}
+
+.enq-brand-name {
+  @include title-font(700);
+  font-size: 15px;
+  color: $white;
+  line-height: 1.1;
+}
+
+.enq-brand-tag {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: $accent;
+  font-weight: 700;
+}
+
+.enq-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.enq-heading {
+  @include title-font(800);
+  font-size: 23px;
+  line-height: 1.28;
+  margin-bottom: 12px;
+
+  span {
+    color: $accent;
+  }
+}
+
+// Line-dot-line divider under headings
+.enq-divider {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+
+  span:nth-child(1) {
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: $accent;
+  }
+
+  span:nth-child(2) {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: $accent;
+  }
+
+  span:nth-child(3) {
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: oklch(1 0 0 / 0.3);
+  }
+}
+
+.enq-divider-form {
+  margin: 0 0 22px 48px;
+
+  span:nth-child(3) {
+    width: 26px;
+    background: oklch(0.9 0.01 265);
+  }
+}
+
+.enq-lead {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: oklch(0.9 0.02 265);
+  margin: 0 0 20px;
+}
+
+.enq-tiles {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.enq-tile {
+  background: $white;
+  border-radius: $radius-md;
+  padding: 12px 6px 10px;
+  text-align: center;
+  box-shadow: 0 8px 18px -12px oklch(0.15 0.05 265 / 0.5);
+}
+
+.enq-tile-icon {
+  @include flex-center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 auto 7px;
+}
+
+.enq-tile-blue { background: oklch(0.93 0.05 255); color: oklch(0.5 0.19 255); }
+.enq-tile-green { background: oklch(0.93 0.06 150); color: oklch(0.46 0.15 150); }
+.enq-tile-amber { background: oklch(0.93 0.06 50); color: oklch(0.58 0.17 50); }
+.enq-tile-purple { background: oklch(0.92 0.05 300); color: oklch(0.5 0.18 300); }
+
+.enq-tile-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: $ink;
+}
+
+// Building photo fills the rest of the panel and fades up into the blue
+.enq-photo-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 280px;
+  margin: 0 -46px 0 -28px;
+}
+
+.enq-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 4%;
+}
+
+.enq-photo-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, oklch(0.36 0.13 265) 0%, oklch(0.36 0.13 265 / 0) 34%);
+}
+
+// Curved right edge; the white fill also clips the photo
+.enq-curve {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 48px;
+  height: 100%;
+  z-index: 2;
+}
+
+.enq-curve-fill {
+  fill: $white;
+}
+
+.enq-curve-line {
+  fill: none;
+  stroke: $accent;
+}
+
+// Right panel: form
+.enq-form-panel {
+  padding: 36px 40px;
+  background: $white;
+  min-width: 0;
+}
+
+.enq-form-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.enq-form-icon {
+  @include flex-center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: $primary-tint;
+  color: $primary;
+  flex-shrink: 0;
+}
+
+.enq-form-title {
+  @include title-font(700);
+  font-size: 21px;
+  color: $primary;
+}
+
+.enq-form-sub {
+  font-size: 13.5px;
+  color: $ink-soft;
+  margin: 0 0 10px 48px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field {
+  margin: 0;
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+.field-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  input {
+    width: auto;
+    margin-top: 3px;
+  }
+
+  label {
+    margin: 0;
+    font-weight: 500;
+    font-size: 12.5px;
+    color: $ink-soft;
+  }
+}
+
+.enq-submit {
+  grid-column: 1 / -1;
+  width: 100%;
+  background: $primary-gradient;
+  color: $white;
+  border: none;
+  padding: 14px;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.enq-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: $ink-soft;
+  text-align: center;
+}
+
+// Sent state
+.enq-sent {
+  text-align: center;
+  padding: 28px 8px;
+}
+
+.enq-sent-icon {
+  @include flex-center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: oklch(0.94 0.04 150);
+  color: $success;
+  margin: 0 auto 16px;
+}
+
+.enq-sent-title {
+  @include title-font(700);
+  font-size: 18px;
+  color: $ink;
+  margin-bottom: 8px;
+}
+
+.enq-sent-text {
+  font-size: 14px;
+  color: $ink-soft;
+  line-height: 1.6;
+  margin: 0 auto 20px;
+  max-width: 380px;
+}
+
+// Trust strip
+.enq-trust {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid $border-soft;
+}
+
+.enq-trust-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.enq-stars {
+  color: oklch(0.74 0.16 75);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.enq-avatars {
+  display: flex;
+  padding-left: 8px;
+
+  > div {
+    @include flex-center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: $primary-tint;
+    color: $primary;
+    font-size: 9px;
+    font-weight: 700;
+    border: 2px solid $white;
+    margin-left: -8px;
+  }
+
+  > div:last-child {
+    background: $accent;
+    color: $white;
+  }
+}
+
+.enq-trust-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: $primary;
+}
+
+.enq-trust-sub {
+  font-size: 11.5px;
+  color: $ink-soft;
+}
+
+@include respond-below(md) {
+  .enq-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // Text + tiles on the left, the building photo on the right
+  .enq-aside {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    padding: 0;
+  }
+
+  .enq-brand,
+  .enq-copy,
+  .enq-tiles {
+    grid-column: 1;
+    padding-left: 26px;
+    padding-right: 22px;
+  }
+
+  .enq-brand {
+    padding-top: 24px;
+  }
+
+  .enq-tiles {
+    padding-bottom: 24px;
+    margin-bottom: 0;
+  }
+
+  .enq-photo-wrap {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    margin: 0;
+    min-height: 0;
+  }
+
+  .enq-photo-fade {
+    background: linear-gradient(90deg, oklch(0.36 0.13 265) 0%, oklch(0.36 0.13 265 / 0) 30%);
+  }
+
+  .enq-curve {
+    display: none;
+  }
+}
+
+@include respond-below(sm) {
+  .enq-overlay {
+    padding: 12px 8px;
+  }
+
+  .enq-aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enq-brand,
+  .enq-copy {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .enq-brand {
+    padding-top: 18px;
+  }
+
+  .enq-lead,
+  .enq-tiles {
+    display: none;
+  }
+
+  .enq-photo-wrap {
+    grid-column: 1;
+    grid-row: auto;
+    height: 300px;
+  }
+
+  .enq-photo-fade {
+    background: linear-gradient(180deg, oklch(0.34 0.125 265) 0%, oklch(0.34 0.125 265 / 0) 32%);
+  }
+
+  .enq-close {
+    top: 10px;
+    right: 10px;
+  }
+
+  .enq-form-panel {
+    padding: 26px 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

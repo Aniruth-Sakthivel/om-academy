@@ -1,0 +1,141 @@
+@use "../../utils/variables" as *;
+@use "../../utils/mixins" as *;
+/*====== Gallery ======*/
+
+.gallery-lead {
+  margin-bottom: 20px;
+}
+
+.gallery-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.gallery-stat-n {
+  @include title-font(800);
+  font-size: 22px;
+  color: $primary;
+}
+
+.gallery-stat-label {
+  font-size: 12.5px;
+  color: $ink-soft;
+}
+
+.gallery-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid $border;
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+
+.gallery-count {
+  font-size: 13.5px;
+  color: $ink-soft;
+
+  strong {
+    color: $ink;
+  }
+}
+
+.gallery-card {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: $white;
+  border: 1px solid $border;
+  min-width: 0;
+}
+
+.gallery-card-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s;
+  }
+}
+
+.gallery-card:hover .gallery-card-media img {
+  transform: scale(1.06);
+}
+
+.gallery-card-body {
+  display: block;
+  padding: 12px 14px;
+}
+
+.gallery-card-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tone-fg);
+  letter-spacing: 0.03em;
+}
+
+.gallery-card-title {
+  display: block;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: $ink;
+  margin-top: 2px;
+}
+
+// Trust badges under the grid
+.grid-badges {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  border-top: 1px solid $border;
+  padding-top: 36px;
+  margin-top: 44px;
+}
+
+.trust-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+
+  svg {
+    flex-shrink: 0;
+    color: $success;
+  }
+}
+
+.trust-badge-title {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: $ink;
+}
+
+@include respond-below(md) {
+  .grid-badges {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 14px;
+  }
+}
+
+@include respond-below(sm) {
+  .grid-badges {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
