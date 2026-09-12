@@ -108,6 +108,51 @@
   font-size: 14.5px;
 }
 
+// Portal login: outlined companion to the Enquire button
+.btn-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border: 1.5px solid $primary;
+  background: transparent;
+  @include link-color($primary);
+
+  &:hover {
+    background: var(--primary-tint);
+  }
+}
+
+// Just above the drawer breakpoint the full nav is tight: Login shrinks to an icon so the row doesn't wrap
+@media (min-width: 1181px) and (max-width: 1300px) {
+  .header-inner {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .nav-links {
+    gap: 3px;
+  }
+
+  .btn-nav {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .btn-login {
+    padding: 10px 12px;
+  }
+
+  .btn-login-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
 .hamburger {
   display: none;
   background: none;

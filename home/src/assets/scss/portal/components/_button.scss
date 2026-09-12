@@ -1,0 +1,132 @@
+/*============================
+  Buttons
+============================*/
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  font: 600 13.5px var(--font-body);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:disabled,
+  &.is-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-contrast);
+
+  &:hover:not(:disabled) {
+    background: var(--primary-hover);
+    color: var(--primary-contrast);
+  }
+}
+
+.btn-outline {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--title);
+
+  &:hover:not(:disabled) {
+    background: var(--surface-hover);
+    color: var(--title);
+    border-color: var(--text-muted);
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+
+  &:hover:not(:disabled) {
+    background: var(--surface-muted);
+    color: var(--title);
+  }
+}
+
+.btn-soft {
+  background: var(--primary-soft);
+  color: var(--primary);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in oklch, var(--primary) 18%, transparent);
+    color: var(--primary);
+  }
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: var(--danger-hover);
+    color: #fff;
+  }
+}
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.94);
+    color: #fff;
+  }
+}
+
+.btn-sm {
+  height: 32px;
+  padding: 0 11px;
+  font-size: 12.5px;
+  border-radius: 8px;
+}
+
+.btn-lg {
+  height: 44px;
+  padding: 0 20px;
+  font-size: 14.5px;
+}
+
+.btn-icon {
+  width: 38px;
+  padding: 0;
+
+  &.btn-sm {
+    width: 32px;
+  }
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--primary);
+  font: 600 12.5px var(--font-body);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+  }
+}

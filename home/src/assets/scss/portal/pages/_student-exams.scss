@@ -1,0 +1,99 @@
+@use "../../utils/mixins" as *;
+/*====== student-exams ======*/
+
+// Page-specific styles for student-exams.html only. Shared components live in portal/components/.
+
+.exam-card {
+  display: flex;
+  flex-direction: column;
+
+  > .card-body {
+    flex: 1;
+  }
+}
+
+.exam-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.exam-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.exam-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+  flex-shrink: 0;
+  line-height: 1.1;
+}
+
+.exam-date-day {
+  font: 700 20px var(--font-title);
+}
+
+.exam-date-mon {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.exam-meta {
+  list-style: none;
+  margin: 4px 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  font-size: 13px;
+  color: var(--text);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  svg {
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+}
+
+.exam-grade {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 12.5px;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+@include respond-below(sm) {
+  .exam-meta {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .exam-card .card-footer {
+    flex-wrap: wrap;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

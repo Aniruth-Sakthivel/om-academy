@@ -1,0 +1,130 @@
+@use "../../utils/mixins" as *;
+/*============================
+  Page header & section layout
+============================*/
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font: 700 22px var(--font-title);
+  color: var(--title);
+  margin: 0;
+}
+
+.page-subtitle {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+
+  li + li::before {
+    content: "/";
+    margin-right: 6px;
+    color: var(--border-strong);
+  }
+
+  a {
+    color: var(--text-muted);
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+// Vertical rhythm between the blocks of a page
+.page-section {
+  margin-bottom: 16px;
+}
+
+.page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Greeting banner (dashboards)
+.welcome-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 22px 24px;
+  border-radius: var(--radius-lg);
+  background: var(--primary-gradient);
+  color: #fff;
+
+  h2 {
+    color: #fff;
+    margin: 0 0 4px;
+    font-size: 20px;
+  }
+
+  p {
+    margin: 0;
+    color: rgb(255 255 255 / 0.82);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: -60px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.08);
+    pointer-events: none;
+  }
+}
+
+@include respond-below(sm) {
+  .page-header {
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    font-size: 19px;
+  }
+
+  .page-actions {
+    width: 100%;
+
+    .btn {
+      flex: 1 1 auto;
+    }
+  }
+
+  .welcome-card {
+    padding: 18px;
+  }
+}

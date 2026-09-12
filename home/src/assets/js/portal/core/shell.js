@@ -20,6 +20,7 @@ import { icon } from "./icons.js";
 import { html, raw, esc, on, qs, qsa, initDropdowns, toast, tabs as wireTabs, setSearchParam, getSearchParam, avatar, mount } from "./ui.js";
 import * as clock from "./clock.js";
 import { updateTheme as retintCharts } from "./charts.js";
+import { installGlobalHandlers, friendlyMessage } from "./errors.js";
 
 const THEME_KEY = "theme";
 
@@ -85,12 +86,12 @@ function chromeHtml({ portal, user, activePage }) {
             <span class="brand-mark">OM</span>
             <span class="brand-text"><span class="brand-name">OM Academy</span><span class="brand-tag">${raw(portal === "student" ? "Student Portal" : "Staff Portal")}</span></span>
           </a>
+          <button type="button" class="sidebar-mini-toggle" data-mini-toggle aria-label="Collapse menu" title="Collapse / expand menu">${raw(icon("PanelLeftClose", { size: 16 }))}</button>
           <button type="button" class="sidebar-close" data-sidebar-close aria-label="Close menu">${raw(icon("X", { size: 18 }))}</button>
         </div>
         <div class="sidebar-inner">
           <ul class="sidebar-menu" data-sidebar-menu role="menu" aria-label="Main navigation"></ul>
         </div>
-        <button type="button" class="sidebar-mini-toggle" data-mini-toggle aria-label="Collapse menu">${raw(icon("PanelLeftClose", { size: 16 }))}</button>
       </aside>
 
       <div class="page-wrapper">
@@ -118,7 +119,7 @@ function chromeHtml({ portal, user, activePage }) {
                 <div class="dropdown-menu dropdown-menu-lg" data-dropdown-menu role="menu">
                   <div class="profile-card">${raw(avatar({ name: user.name, size: "md" }))}<div><div class="profile-name">${user.name}</div><div class="profile-role">${authApi.roleOf(user)?.name || user.role}</div></div></div>
                   <div class="dropdown-sep"></div>
-                  <a class="dropdown-item" href="${raw(portal === "student" ? "student-profile.html" : "admin-settings.html")}">${raw(icon("UserRound", { size: 14 }))}Profile</a>
+                  ${portal === "student" || can(user, "settings.manage") ? html`<a class="dropdown-item" href="${raw(portal === "student" ? "student-profile.html" : "admin-settings.html")}">${raw(icon("UserRound", { size: 14 }))}${portal === "student" ? "Profile" : "Settings"}</a>` : ""}
                   <button type="button" class="dropdown-item" data-switch-account>${raw(icon("RefreshCw", { size: 14 }))}Switch demo account</button>
                   <div class="dropdown-sep"></div>
                   <button type="button" class="dropdown-item is-danger" data-logout>${raw(icon("LogOut", { size: 14 }))}Log out</button>
@@ -128,6 +129,7 @@ function chromeHtml({ portal, user, activePage }) {
           </div>
         </header>
 
+        ${(store.get("settings").system || {}).maintenanceBanner ? html`<div class="maintenance-banner" role="status">${raw(icon("Info", { size: 16 }))}<span>${store.get("settings").system.maintenanceBanner}</span></div>` : ""}
         <main id="main" tabindex="-1" data-page-main></main>
         <footer class="portal-footer"><p>© ${new Date().getFullYear()} OM Academy. Portal demo — no real payments are processed.</p></footer>
       </div>
@@ -287,6 +289,8 @@ export function boot(def) {
       window.location.href = "student-dashboard.html";
       return;
     }
+    authApi.touchSession(def.portal);
+    ["click", "keydown"].forEach((type) => document.addEventListener(type, () => authApi.touchSession(def.portal), { passive: true }));
     const allowed = !def.perm || def.perm.length === 0 || canAny(user, def.perm);
 
     applyTheme(readTheme(user));
@@ -323,7 +327,19 @@ export function boot(def) {
       clock,
     };
 
-    def.mount?.(ctx);
+    installGlobalHandlers();
+    try {
+      await def.mount?.(ctx);
+    } catch (err) {
+      console.error(err);
+      main.innerHTML = html`
+        <div class="access-denied">
+          <div class="access-denied-icon">${raw(icon("TriangleAlert", { size: 28 }))}</div>
+          <h2>This page couldn't load</h2>
+          <p>${friendlyMessage(err)}</p>
+          <button type="button" class="btn btn-primary" onclick="location.reload()">Reload page</button>
+        </div>`;
+    }
     document.body.classList.remove("is-booting");
 
     const unwatch = def.watch?.length

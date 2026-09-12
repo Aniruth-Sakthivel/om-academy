@@ -1,0 +1,92 @@
+@use "../../utils/mixins" as *;
+/*============================
+  FullCalendar theming (core/calendar.js)
+============================*/
+
+// FullCalendar v6 injects its own base CSS; these variables re-skin it for both themes.
+.fc {
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: var(--surface);
+  --fc-neutral-bg-color: var(--surface-alt);
+  --fc-neutral-text-color: var(--text-muted);
+  --fc-today-bg-color: var(--primary-soft);
+  --fc-list-event-hover-bg-color: var(--surface-muted);
+  --fc-button-bg-color: var(--surface);
+  --fc-button-border-color: var(--border-strong);
+  --fc-button-text-color: var(--title);
+  --fc-button-hover-bg-color: var(--surface-muted);
+  --fc-button-hover-border-color: var(--border-strong);
+  --fc-button-active-bg-color: var(--primary);
+  --fc-button-active-border-color: var(--primary);
+  --fc-now-indicator-color: var(--danger);
+  font-size: 13px;
+  color: var(--text);
+
+  a {
+    color: inherit;
+  }
+
+  .fc-toolbar-title {
+    font: 700 17px var(--font-title);
+    color: var(--title);
+  }
+
+  .fc-button {
+    font: 600 12.5px var(--font-body);
+    border-radius: 8px;
+    box-shadow: none !important;
+    text-transform: capitalize;
+    padding: 6px 11px;
+  }
+
+  .fc-button-primary:not(:disabled).fc-button-active,
+  .fc-button-primary:not(:disabled):active {
+    color: #fff;
+  }
+
+  .fc-col-header-cell-cushion {
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 8px 4px;
+  }
+
+  .fc-daygrid-day-number {
+    color: var(--title);
+    font-weight: 500;
+  }
+
+  .fc-event {
+    border-radius: 6px;
+    border-width: 0 0 0 3px;
+    padding: 1px 4px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .fc-list-event-title,
+  .fc-list-day-text,
+  .fc-list-day-side-text {
+    color: var(--title);
+  }
+}
+
+.cal-legend {
+  display: flex;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.cal-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@include respond-below(sm) {
+  .fc .fc-toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

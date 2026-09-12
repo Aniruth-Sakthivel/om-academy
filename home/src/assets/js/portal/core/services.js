@@ -8,7 +8,7 @@ Description  : The only place that writes to the store. Every mutation: (1) asse
 
 import * as store from "./store.js";
 import { roleHas } from "./perms.js";
-import { nowISO, today, addDays, dateOf, financialYear, weekday } from "./clock.js";
+import { nowISO, today, addDays, dateOf, financialYear, weekday, setOverride, diffDays } from "./clock.js";
 import * as sel from "./selectors.js";
 import * as files from "./files.js";
 
@@ -68,7 +68,8 @@ export const setTheme = wrap((user, theme) => store.update("users", user.id, { p
 
 export const setDemoDate = wrap((user, isoOrNull) => {
   assert(user, "settings.manage");
-  import("./clock.js").then((c) => c.setOverride(isoOrNull));
+  setOverride(isoOrNull);
+  log(user, "settings.demo-date", "settings", null, isoOrNull ? `Demo date set to ${isoOrNull}` : "Demo date cleared");
 });
 
 /* =========================================================================================
@@ -159,13 +160,16 @@ export const saveRole = wrap((user, roleId, patch) => {
 
 export const saveCenter = wrap((user, id, patch) => {
   assert(user, "centers.manage");
-  return id ? store.update("centers", id, patch) : store.insert("centers", patch);
+  const rec = id ? store.update("centers", id, patch) : store.insert("centers", patch);
+  log(user, id ? "center.update" : "center.create", "centers", rec.id, rec.name || "");
+  return rec;
 });
 
 export const removeCenter = wrap((user, id) => {
   assert(user, "centers.manage");
   if (store.count("batches", (b) => b.centerId === id)) throw new Error("This center still has batches assigned to it.");
-  store.remove("centers", id);
+  const [rec] = store.remove("centers", id);
+  log(user, "center.remove", "centers", id, rec?.name || "");
 });
 
 export const saveCourse = wrap((user, id, patch) => {
@@ -263,7 +267,8 @@ export const enrollStudent = wrap((user, { studentId, batchId }) => {
   const already = store.get("enrollments").find((e) => e.studentId === studentId && e.batchId === batchId && e.status === "active");
   if (already) throw new Error("This student is already enrolled in this batch.");
 
-  const structure = store.byId("feeStructures", batch.feeStructureId);
+  // A batch may override its course's fee structure; otherwise the course's structure applies.
+  const structure = store.byId("feeStructures", batch.feeStructureId || store.byId("courses", batch.courseId)?.feeStructureId);
   const enr = store.insert("enrollments", { studentId, batchId, courseId: batch.courseId, enrolledAt: nowISO(), status: "active", invoiceIds: [] });
 
   const invoiceIds = [];
@@ -288,9 +293,15 @@ export const enrollStudent = wrap((user, { studentId, batchId }) => {
 export const transferEnrollment = wrap((user, enrollmentId, newBatchId) => {
   assert(user, "enrollments.manage");
   const enr = store.byId("enrollments", enrollmentId);
-  store.update("enrollments", enrollmentId, { status: "transferred" });
+  if (!enr) throw new Error("That enrolment no longer exists.");
   const batch = store.byId("batches", newBatchId);
-  const created = store.insert("enrollments", { studentId: enr.studentId, batchId: newBatchId, courseId: batch.courseId, enrolledAt: nowISO(), status: "active", invoiceIds: [] });
+  if (!batch) throw new Error("Batch not found.");
+  if (batch.id === enr.batchId) throw new Error("The student is already in this batch.");
+  const filled = store.count("enrollments", (e) => e.batchId === newBatchId && e.status === "active");
+  if (batch.capacity && filled >= batch.capacity) throw new Error(`${batch.name} is at capacity.`);
+  store.update("enrollments", enrollmentId, { status: "transferred" });
+  // The fees already billed stay with the student: the new enrolment carries the same invoices (none are re-issued)
+  const created = store.insert("enrollments", { studentId: enr.studentId, batchId: newBatchId, courseId: batch.courseId, enrolledAt: nowISO(), status: "active", invoiceIds: enr.invoiceIds || [], transferredFrom: enrollmentId });
   notify(enr.studentId, { type: "enrollment", title: `Transferred to ${batch.name}`, link: "student-courses.html" });
   log(user, "enrollment.transfer", "enrollments", enrollmentId, `Transferred to ${batch.name}`);
   return created;
@@ -313,6 +324,13 @@ export const completeEnrollment = wrap((user, enrollmentId, certificateNo) => {
 
 export const markAttendance = wrap((user, { batchId, slotId, date, records }) => {
   assert(user, "attendance.mark");
+  // Same rule the page shows: no future dates, and past dates only within the edit window (admins exempt)
+  if (date > today()) throw new Error("Attendance can't be marked for a future date.");
+  const windowDays = (store.get("settings").attendance || {}).editWindowDays;
+  const isAdmin = roleHas(store.byId("roles", user.role), "*");
+  if (!isAdmin && windowDays != null && diffDays(today(), date) > windowDays) {
+    throw new Error(`Attendance older than ${windowDays} days is locked. Ask an administrator to change it.`);
+  }
   const existing = store.get("attendanceSessions").find((s) => s.batchId === batchId && s.slotId === slotId && s.date === date);
   const rec = existing
     ? store.update("attendanceSessions", existing.id, { records, markedBy: user.id, markedAt: nowISO() })
@@ -430,14 +448,27 @@ export const saveExam = wrap((user, id, patch) => {
   return rec;
 });
 
-export const enterMarks = wrap((user, examId, entries) => {
+export const deleteExam = wrap((user, examId) => {
+  assert(user, "exams.manage");
+  const exam = store.byId("exams", examId);
+  if (!exam) throw new Error("That exam no longer exists.");
+  if (exam.status === "published") throw new Error("Published results can't be deleted.");
+  store.remove("marks", (m) => m.examId === examId);
+  store.remove("exams", examId);
+  log(user, "exam.delete", "exams", examId, exam.title);
+  return true;
+});
+
+export const enterMarks =wrap((user, examId, entries) => {
   assert(user, "marks.enter");
   const out = entries.map(({ studentId, marks, absent, remarks }) => {
     const existing = sel.marksFor(examId, studentId);
     const patch = { examId, studentId, marks: absent ? null : marks, absent: !!absent, remarks: remarks || "", enteredBy: user.id, enteredAt: nowISO() };
     return existing ? store.update("marks", existing.id, patch) : store.insert("marks", patch);
   });
-  store.update("exams", examId, { status: "marks-entry" });
+  // A correction after publishing keeps the exam published (and students see the corrected marks)
+  const exam = store.byId("exams", examId);
+  if (exam && exam.status !== "published") store.update("exams", examId, { status: "marks-entry" });
   log(user, "marks.enter", "exams", examId, `Entered marks for ${entries.length} students`);
   return out;
 });
@@ -572,12 +603,15 @@ export const createAnnouncement = wrap((user, data) => {
 
 export const updateAnnouncement = wrap((user, id, patch) => {
   assert(user, "announcements.manage");
-  return store.update("announcements", id, patch);
+  const rec = store.update("announcements", id, patch);
+  log(user, "announcement.update", "announcements", id, rec.title);
+  return rec;
 });
 
 export const removeAnnouncement = wrap((user, id) => {
   assert(user, "announcements.manage");
-  store.remove("announcements", id);
+  const [rec] = store.remove("announcements", id);
+  log(user, "announcement.remove", "announcements", id, rec?.title || "");
 });
 
 export const markAnnouncementRead = wrap((user, id) => store.update("announcements", id, (a) => (a.readBy.includes(user.id) ? a : { ...a, readBy: [...a.readBy, user.id] })));
@@ -632,20 +666,29 @@ export const replyThread = wrap((user, threadId, { body, fileList }) => {
 
 function notifyThreadRecipients(thread, sender, subject) {
   for (const p of thread.participants) {
-    if (p.type === "user" && p.id !== sender.id) notify(p.id, { type: "message", title: `New message: ${subject}`, link: sender.role === "student" ? "admin-communication.html?tab=inbox" : "student-notifications.html?tab=messages" });
+    // Links open the conversation itself (?id=<threadId>), not just the inbox
+    const staffLink = "admin-communication.html?tab=inbox&id=" + thread.id;
+    const studentLink = "student-notifications.html?tab=messages&id=" + thread.id;
+    if (p.type === "user" && p.id !== sender.id) {
+      const recipient = store.byId("users", p.id);
+      notify(p.id, { type: "message", title: `New message: ${subject}`, link: recipient?.role === "student" ? studentLink : staffLink });
+    }
     if (p.type === "role" && p.id !== sender.role) {
-      store.where("users", (u) => u.role === p.id).forEach((u) => notify(u.id, { type: "message", title: `New message: ${subject}`, link: "admin-communication.html?tab=inbox" }));
+      store.where("users", (u) => u.role === p.id).forEach((u) => notify(u.id, { type: "message", title: `New message: ${subject}`, link: staffLink }));
     }
   }
 }
 
 export const closeThread = wrap((user, id) => {
   assert(user, "messages.reply");
-  return store.update("threads", id, { status: "closed" });
+  const rec = store.update("threads", id, { status: "closed" });
+  log(user, "thread.close", "threads", id, rec.subject || "");
+  return rec;
 });
 export const markThreadRead = wrap((user, id) => store.update("threads", id, (t) => ({ ...t, readAt: { ...t.readAt, [user.id]: nowISO() } })));
 
 export const createForumThread = wrap((user, { scope, title, body, tags }) => {
+  if (user.role === "student" && (store.get("settings").system || {}).studentForumPosting === false) throw new Error("Starting new forum threads is turned off by the academy. You can still reply to existing threads.");
   const rec = store.insert("forumThreads", { scope, title, body, authorId: user.id, tags: tags || [], pinned: false, locked: false, hidden: false, solvedPostId: null, lastPostAt: nowISO(), views: 0 });
   log(user, "forum.create", "forumThreads", rec.id, title);
   return rec;
@@ -670,16 +713,38 @@ export const reportPost = wrap((user, postId, reason) => {
 
 export const moderateForumPost = wrap((user, postId, action) => {
   assert(user, "forum.moderate");
-  if (action === "hide") return store.update("forumPosts", postId, { hidden: true, reports: [] });
-  if (action === "approve") return store.update("forumPosts", postId, { reports: [] });
+  const patch = action === "hide" ? { hidden: true, reports: [] } : action === "approve" ? { reports: [] } : null;
+  if (!patch) return;
+  const rec = store.update("forumPosts", postId, patch);
+  log(user, "forum.post-" + action, "forumPosts", postId, "");
+  return rec;
 });
 
 export const moderateForumThread = wrap((user, threadId, patch) => {
   assert(user, "forum.moderate");
-  return store.update("forumThreads", threadId, patch);
+  const rec = store.update("forumThreads", threadId, patch);
+  log(user, "forum.thread-moderate", "forumThreads", threadId, `${rec.title}: ${Object.entries(patch).map(([k, v]) => k + "=" + v).join(", ")}`);
+  return rec;
 });
 
-export const incrementThreadViews = wrap((user, threadId) => store.update("forumThreads", threadId, (t) => ({ ...t, views: (t.views || 0) + 1 })));
+// The thread's author (or a moderator) marks one reply as the accepted answer; postId null clears it.
+export const markThreadSolved = wrap((user, threadId, postId) => {
+  const thread = store.byId("forumThreads", threadId);
+  if (!thread) throw new Error("That thread no longer exists.");
+  const canModerate = roleHas(store.byId("roles", user.role), "forum.moderate");
+  if (thread.authorId !== user.id && !canModerate) throw new Error("Only the person who started the thread can mark a solution.");
+  if (thread.locked && !canModerate) throw new Error("This thread is locked.");
+  const post = postId ? store.byId("forumPosts", postId) : null;
+  if (postId && (!post || post.threadId !== threadId)) throw new Error("That reply isn't part of this thread.");
+  const rec = store.update("forumThreads", threadId, { solvedPostId: postId || null, solvedAt: postId ? nowISO() : null });
+  if (post && post.authorId !== user.id) {
+    notify(post.authorId, { type: "forum", title: `Your reply was marked as the solution in "${thread.title}"`, link: "student-forum.html?id=" + threadId });
+  }
+  log(user, postId ? "forum.solved" : "forum.unsolved", "forumThreads", threadId, thread.title);
+  return rec;
+});
+
+export const incrementThreadViews =wrap((user, threadId) => store.update("forumThreads", threadId, (t) => ({ ...t, views: (t.views || 0) + 1 })));
 
 /* =========================================================================================
    CALENDAR / EVENTS / SETTINGS
@@ -694,7 +759,8 @@ export const saveEvent = wrap((user, id, patch) => {
 
 export const removeEvent = wrap((user, id) => {
   assert(user, "calendar.manage");
-  store.remove("events", id);
+  const [rec] = store.remove("events", id);
+  log(user, "event.remove", "events", id, rec?.title || "");
 });
 
 export const updateSettings = wrap((user, patch) => {

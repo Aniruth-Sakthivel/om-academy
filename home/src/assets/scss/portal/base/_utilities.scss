@@ -1,0 +1,84 @@
+@use "../../utils/mixins" as *;
+/*============================
+  Portal utilities
+============================*/
+
+// Layout
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-kpi { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid-main-side { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.grid-side-main { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.stack-sm { display: flex; flex-direction: column; gap: 8px; }
+.stack-lg { display: flex; flex-direction: column; gap: 24px; }
+
+.cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cluster-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+}
+
+.section-gap { margin-bottom: 16px; }
+
+// Text
+.text-muted { color: var(--text-muted); }
+.text-title { color: var(--title); }
+.text-sm { font-size: 12.5px; }
+.text-xs { font-size: 11.5px; }
+.text-lg { font-size: 16px; }
+.fw-600 { font-weight: 600; }
+.fw-700 { font-weight: 700; }
+.nowrap { white-space: nowrap; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-danger { color: var(--danger); }
+.text-success { color: var(--success); }
+.money,
+.tabular { font-variant-numeric: tabular-nums; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-0 { margin: 0; }
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+.w-100 { width: 100%; }
+
+// Quantized widths for progress bars and meters (no inline styles): .pct-0 … .pct-100 in steps of 5
+@for $i from 0 through 20 {
+  .pct-#{$i * 5} {
+    width: #{$i * 5}%;
+  }
+}
+
+@include respond-below(nav) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-main-side,
+  .grid-side-main { grid-template-columns: minmax(0, 1fr); }
+}
+
+@include respond-below(md) {
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@include respond-below(sm) {
+  .grid-2,
+  .grid-3,
+  .grid-4 { grid-template-columns: minmax(0, 1fr); }
+  .grid-kpi { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .hide-sm { display: none !important; }
+}

@@ -1,0 +1,94 @@
+/*============================
+  Tabs
+============================*/
+
+// Underline tabs: <div class="tabs" data-tab-list><button class="tab" data-tab="id" aria-selected="true">…
+.tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 12px;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: 600 13.5px var(--font-body);
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover {
+    color: var(--title);
+  }
+
+  &[aria-selected="true"] {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+}
+
+.tab-count {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  background: var(--surface-muted);
+  color: var(--text);
+
+  .tab[aria-selected="true"] & {
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+}
+
+// Segmented control: <div class="segmented" data-tab-list><button data-tab aria-selected>…
+.segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  max-width: 100%;
+  overflow-x: auto;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    background: none;
+    padding: 6px 12px;
+    border-radius: 7px;
+    font: 600 12.5px var(--font-body);
+    color: var(--text);
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background: var(--surface-muted);
+    }
+
+    &[aria-selected="true"],
+    &.is-active {
+      background: var(--primary);
+      color: #fff;
+    }
+  }
+}

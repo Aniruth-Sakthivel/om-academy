@@ -176,3 +176,33 @@ Unverified, pending owner confirmation:
 - the "100% support" and "24/7 Student Support" claims.
 
 Announcements are dated May–Aug 2026 and need refreshing.
+
+## Portal (Student & Staff portals — `login.html`, `student-*.html`, `admin-*.html`)
+
+A full working demo with no backend: a browser store plays the server, so one portal's actions show up in the other (live across tabs). Dependencies (in `home/package.json` `dependencies`, exact pins): `apexcharts`, `lucide`, `@fullcalendar/*` (all `6.1.21` — core `latest` is 7.x but the plugins peer-require `~6.1.21`).
+
+**Files**
+```
+src/login.html, src/student-*.html, src/admin-*.html   head + boot spinner + one script include each
+src/partials/portal/     title-meta (noindex), header (fonts, portal.scss, no-flash theme script), boot, script
+src/assets/files/        real sample PDF/DOCX files for seeded course resources (copied to dist)
+src/assets/scss/portal.scss + portal/{base,components,layout,pages}/   → dist/assets/css/portal.css
+src/assets/js/portal/core/   store seed migrations services selectors auth perms nav shell ui docs errors
+                             format clock charts calendar icons files
+src/assets/js/portal/pages/  one module per page (basename = HTML name)
+```
+
+**Page contract.** Each page module calls `boot({ id, portal, perm, watch, mount(ctx), update(changed), unmount() })` from `core/shell.js`. The shell waits for the store (seeding on first run), checks the session and permissions, **replaces `document.body`** with the sidebar/topbar chrome and renders the page into `ctx.root`. So page HTML files contain no content. Pattern (see `pages/student-fees.js`, `pages/admin-fees.js`): `mount` renders the layout once and creates `ui.dataTable`s; `refresh()` repaints KPIs/charts and calls `table.update(rows)`, so search/paging survive live updates. Deep links: `?tab=<id>&id=<recordId>`.
+
+**Data.**
+- `store.js`: one localStorage key per collection (`om-portal:<name>`), read-modify-write on every change, cross-tab sync via the `storage` event. Sessions are per portal (`om-portal:session:student`, `om-portal:session:staff`) so a student and a staff tab can be signed in side by side.
+- `seed.js`: deterministic (mulberry32), dates anchored to the day of seeding. Demo accounts have fixed ids: `usr_student_demo`, `usr_admin_demo`, `usr_teacher_demo`, `usr_accountant_demo` (passwords on the login page).
+- **Pages never write to the store.** Every mutation goes through `services.js` (permission check, side effects such as notifications and invoices, activity log). Derived numbers (attendance %, invoice status, GPA, pending tasks) come from `selectors.js` so every screen agrees.
+
+**Errors.** Wrap every service call in `run(() => services.x(ctx.user, …), { success, error })` from `core/errors.js` — it shows a success toast or a plain-language error toast and never throws. Forms use `modal.form({ fields, values, validate })`; `validate` returns `{ field: "message" }` for inline errors. The shell installs global handlers (uncaught errors, rejected promises, storage full) and shows a reload panel if a page's `mount` throws.
+
+**Templating.** `ui.html\`…\`` escapes every interpolation and returns a trusted `Raw` value, so nested `html` results are inserted as markup. Wrap `icon()` output and pre-joined strings in `raw()`. `dataTable` column `render()` may return markup (`html`/`badge()`) or plain text (escaped).
+
+**Styling.** Same rules as the home page: classes only, no inline `style` attributes (dynamic widths use `.pct-0 … .pct-100` in steps of 5). Every portal colour is a CSS custom property (`--surface`, `--text`, `--title`, `--border`, `--primary`…) with one `[data-theme="dark"]` override block in `portal/base/_tokens.scss`. Tone classes (`.tone-blue|green|amber|rust|purple|navy|slate`) set `--tone-fg`/`--tone-bg` (derived with `color-mix`, so they work in both themes). ApexCharts can't read CSS variables, so `charts.js` passes hex palettes per theme. Only icons listed in `core/icons.js` exist (Lucide 1.45 renamed some files, e.g. `trash-2` → `trash`).
+
+**Layout breakpoints.** Full floating sidebar above 1180px (user can collapse it to the mini icon bar), mini icon sidebar 901–1180px, off-canvas sidebar ≤900px; tables become stacked cards ≤640px and modals become bottom sheets.

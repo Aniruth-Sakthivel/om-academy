@@ -1,0 +1,63 @@
+/*
+Author       : OM Academy
+Description  : Portal stylesheet (Student & Staff portals). Compiled by Vite into assets/css/portal.css.
+               Mirrors the Dreams ERP admin shell in OM Academy colours, with a light/dark theme.
+               Page agents only edit their own portal/pages/_<page>.scss — never this file.
+*/
+
+/****** Utils (shared with the home page) ******/
+@use "utils/variables";
+@use "utils/mixins";
+
+/******* Base *******/
+@use "portal/base/tokens";
+@use "portal/base/base";
+@use "portal/base/utilities";
+
+/******* Components ******/
+@use "portal/components/tones";
+@use "portal/components/button";
+@use "portal/components/card";
+@use "portal/components/stat-card";
+@use "portal/components/badge";
+@use "portal/components/avatar";
+@use "portal/components/form";
+@use "portal/components/table";
+@use "portal/components/tabs";
+@use "portal/components/modal";
+@use "portal/components/drawer";
+@use "portal/components/dropdown";
+@use "portal/components/toast";
+@use "portal/components/misc";
+@use "portal/components/chat";
+@use "portal/components/calendar";
+
+/****** Layout ******/
+@use "portal/layout/shell";
+@use "portal/layout/page";
+
+/******* Pages ******/
+@use "portal/pages/login";
+@use "portal/pages/student-dashboard";
+@use "portal/pages/student-courses";
+@use "portal/pages/student-assignments";
+@use "portal/pages/student-attendance";
+@use "portal/pages/student-fees";
+@use "portal/pages/student-exams";
+@use "portal/pages/student-profile";
+@use "portal/pages/student-notifications";
+@use "portal/pages/student-resources";
+@use "portal/pages/student-forum";
+@use "portal/pages/student-calendar";
+@use "portal/pages/student-progress";
+@use "portal/pages/admin-dashboard";
+@use "portal/pages/admin-users";
+@use "portal/pages/admin-courses";
+@use "portal/pages/admin-academics";
+@use "portal/pages/admin-fees";
+@use "portal/pages/admin-reports";
+@use "portal/pages/admin-communication";
+@use "portal/pages/admin-settings";
+
+/******* Print (last, so it wins) ******/
+@use "portal/base/print";

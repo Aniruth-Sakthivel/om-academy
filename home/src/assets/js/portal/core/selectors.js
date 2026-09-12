@@ -53,6 +53,8 @@ export function sessionsForBatch(batchId, { from, to } = {}) {
 export function attendanceStats(studentId, batchId) {
   const batchIds = batchId ? [batchId] : activeBatchesOf(studentId).map((b) => b.id);
   let present = 0, absent = 0, late = 0, excused = 0, total = 0;
+  // Settings → Rules: approved leave ("E") is excluded from the percentage, or counted as present / absent
+  const leaveCounts = (store.get("settings").attendance || {}).leaveCounts || "excluded";
   for (const bId of batchIds) {
     for (const session of sessionsForBatch(bId)) {
       const mark = session.records[studentId];
@@ -61,10 +63,13 @@ export function attendanceStats(studentId, batchId) {
       if (mark === "P") present++;
       else if (mark === "A") absent++;
       else if (mark === "L") { late++; present++; }
-      else if (mark === "E") excused++;
+      else if (mark === "E") {
+        excused++;
+        if (leaveCounts === "present") present++;
+      }
     }
   }
-  const countable = total - excused;
+  const countable = leaveCounts === "excluded" ? total - excused : total;
   const pct = countable > 0 ? Math.round((present / countable) * 1000) / 10 : 100;
   return { present, absent, late, excused, total, pct };
 }
@@ -121,7 +126,7 @@ export function assignmentStatusFor(assignment, studentId) {
   const sub = submissionFor(assignment.id, studentId);
   if (sub && sub.status === "graded") return "graded";
   if (sub) return "submitted";
-  if (diffDays(today(), dateOf(assignment.dueAt)) < 0) return assignment.allowLate ? "overdue-allowed" : "overdue";
+  if (isPastDue(assignment.dueAt)) return assignment.allowLate ? "overdue-allowed" : "overdue";
   return "pending";
 }
 
@@ -169,13 +174,16 @@ export function invoicesForStudent(studentId) {
 export const paymentsForInvoice = (invoiceId) => store.where("payments", (p) => p.invoiceId === invoiceId && p.status === "success");
 export const paidAmount = (invoiceId) => paymentsForInvoice(invoiceId).reduce((sum, p) => sum + p.amount, 0);
 
-// Computed status: cancelled | paid | partial | overdue | issued (not yet due) — never stored, always derived
+// Computed status: cancelled | paid | partial | overdue | issued (not yet due) — never stored, always derived.
+// diffDays(a, b) is a − b, so diffDays(today, dueDate) > 0 means the due date has passed.
+export const isPastDue = (dueDate) => diffDays(today(), dateOf(dueDate)) > 0;
+
 export function invoiceStatus(invoice) {
   if (invoice.status === "cancelled" || invoice.status === "draft") return invoice.status;
   const paid = paidAmount(invoice.id);
   if (paid >= invoice.total) return "paid";
-  if (paid > 0) return diffDays(today(), invoice.dueDate) < 0 ? "overdue" : "partial";
-  return diffDays(today(), invoice.dueDate) < 0 ? "overdue" : "issued";
+  if (isPastDue(invoice.dueDate)) return "overdue";
+  return paid > 0 ? "partial" : "issued";
 }
 
 export function feeSummary(studentId) {

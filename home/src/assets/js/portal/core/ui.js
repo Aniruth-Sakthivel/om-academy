@@ -18,15 +18,21 @@ export function esc(value) {
 // A value wrapped with raw() is inserted unescaped by html`...` — use only for output of html`` itself or icon().
 class Raw {
   constructor(value) {
-    this.value = value;
+    this.value = value instanceof Raw ? value.value : String(value);
   }
   toString() {
     return this.value;
   }
+  valueOf() {
+    return this.value;
+  }
 }
 export const raw = (value) => new Raw(value == null ? "" : value);
+export const isRaw = (value) => value instanceof Raw;
 
 // Tagged template: interpolations are HTML-escaped by default; arrays are joined; raw()/icon-string via raw().
+// Returns a Raw value, so an html`` result nested inside another html`` is inserted as markup, not escaped.
+// Raw stringifies automatically (innerHTML =, template literals, .join("")).
 export function html(strings, ...values) {
   let out = strings[0];
   for (let i = 0; i < values.length; i++) {
@@ -37,7 +43,7 @@ export function html(strings, ...values) {
     else out += esc(v);
     out += strings[i + 1];
   }
-  return out;
+  return new Raw(out);
 }
 
 export const cls = (...names) => names.filter(Boolean).join(" ");
@@ -48,7 +54,7 @@ export const qs = (sel, root = document) => root.querySelector(sel);
 export const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
 export function mount(root, htmlString) {
-  root.innerHTML = htmlString;
+  root.innerHTML = String(htmlString);
   return root;
 }
 
@@ -64,7 +70,7 @@ export function on(root, evt, selector, handler) {
 
 export function el(htmlString) {
   const t = document.createElement("template");
-  t.innerHTML = htmlString.trim();
+  t.innerHTML = String(htmlString).trim();
   return t.content.firstElementChild;
 }
 
@@ -306,7 +312,11 @@ export function fill(form, values = {}) {
     const field = form.elements.namedItem(name);
     if (!field) continue;
     if (field.type === "checkbox") field.checked = !!value;
-    else if ("value" in field) field.value = value ?? "";
+    else if (field.tagName === "SELECT" && field.multiple) {
+      // Multi-select: pre-select every option whose value is in the array
+      const wanted = new Set((Array.isArray(value) ? value : [value]).map(String));
+      Array.from(field.options).forEach((o) => (o.selected = wanted.has(o.value)));
+    } else if ("value" in field) field.value = value ?? "";
   }
 }
 
@@ -381,8 +391,8 @@ export const modal = { open: openModal, form: formModal };
 
 /* ---------- drawer ---------- */
 
-/** drawer.open({ title, body, footer, onClose }) → { root, body, close } */
-function openDrawer({ title, body, footer, wide = false } = {}) {
+/** drawer.open({ title, body, footer, wide, onClose }) → { root, body, close }. onClose runs however it closes. */
+function openDrawer({ title, body, footer, wide = false, onClose } = {}) {
   const overlayId = Symbol("drawer");
   const node = el(html`
     <div class="drawer-overlay" role="presentation">
@@ -398,11 +408,19 @@ function openDrawer({ title, body, footer, wide = false } = {}) {
   `);
   document.body.appendChild(node);
   lockScroll(overlayId);
+  let closed = false;
   function close() {
+    if (closed) return;
+    closed = true;
     unlockScroll(overlayId);
     escHandlers.pop();
     node.classList.remove("is-in");
     setTimeout(() => node.remove(), 260);
+    try {
+      onClose?.();
+    } catch (err) {
+      console.error(err);
+    }
   }
   escHandlers.push(close);
   node.querySelector("[data-drawer-close]").addEventListener("click", close);
@@ -623,7 +641,9 @@ export function dataTable(root, opts) {
       ${raw(
         columns
           .map((c) => {
-            const value = c.render ? c.render(row) : esc(getPath(row, c.key) ?? "");
+            // render() may return markup (html``/badge()/raw()) or plain text; plain text is escaped.
+            const out = c.render ? c.render(row) : getPath(row, c.key);
+            const value = out instanceof Raw ? out.value : esc(out ?? "");
             return html`<td class="${raw(c.hideBelow ? "hide-below-" + c.hideBelow : "")} ${raw(c.align ? "text-" + c.align : "")}" data-label="${c.mobileLabel || c.label}">${raw(value)}</td>`;
           })
           .join("")

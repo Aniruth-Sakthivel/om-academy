@@ -1,0 +1,77 @@
+/*============================
+  Stat (KPI) cards
+============================*/
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  height: 100%;
+  min-width: 0;
+}
+
+.stat-card-link {
+  display: block;
+  color: inherit;
+  border-radius: var(--radius-lg);
+
+  &:hover {
+    color: inherit;
+
+    .stat-card {
+      border-color: var(--primary);
+    }
+  }
+}
+
+.stat-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--tone-bg, var(--primary-soft));
+  color: var(--tone-fg, var(--primary));
+}
+
+.stat-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+
+  &.is-up {
+    color: var(--success);
+    background: color-mix(in oklch, var(--success) 13%, transparent);
+  }
+
+  &.is-down {
+    color: var(--danger);
+    background: color-mix(in oklch, var(--danger) 13%, transparent);
+  }
+}
+
+.stat-label {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 0 0 2px;
+}
+
+.stat-value {
+  font: 700 23px var(--font-title);
+  color: var(--title);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}

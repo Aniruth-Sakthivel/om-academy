@@ -1,0 +1,104 @@
+@use "../../utils/mixins" as *;
+/*====== student-calendar ======*/
+
+// Page-specific styles for student-calendar.html only. Shared components live in portal/components/.
+
+.cal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cal-filter {
+  font: inherit;
+  font-size: 12.5px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: opacity 0.15s, border-color 0.15s;
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &[aria-pressed="false"] {
+    opacity: 0.5;
+
+    .dot {
+      background: var(--border-strong);
+    }
+  }
+}
+
+.cal-filter-count {
+  margin-left: 2px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.cal-agenda-row {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+
+  .list-row-title,
+  .list-row-sub {
+    display: block;
+  }
+}
+
+li:last-child > .cal-agenda-row {
+  border-bottom: 0;
+}
+
+.cal-agenda-date {
+  flex-shrink: 0;
+  width: 44px;
+  padding: 5px 0;
+  border-radius: 10px;
+  text-align: center;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+  line-height: 1.15;
+
+  strong {
+    display: block;
+    font-size: 16px;
+  }
+
+  span {
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+}
+
+.cal-modal-desc {
+  margin: 14px 0 0;
+  white-space: pre-line;
+}
+
+@include respond-below(sm) {
+  .cal-toolbar {
+    align-items: flex-start;
+  }
+}
