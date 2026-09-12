@@ -1,0 +1,78 @@
+/*============================
+  Portal tokens (light + dark)
+============================*/
+
+// Every portal colour is a CSS custom property, so dark mode is one override block (the Dreams ERP approach).
+// The theme is <html data-theme="light|dark">, set before first paint by partials/portal/header.html.
+
+:root {
+  --surface: #ffffff;
+  --surface-alt: #f5f6fa;
+  --surface-muted: #eef0f5;
+  --surface-hover: #f3f5f9;
+  --border: #e5e7ee;
+  --border-strong: #d4d8e2;
+  --text: #475063;
+  --text-muted: #7b8496;
+  --title: #1c2433;
+
+  --primary: oklch(0.42 0.15 265);
+  --primary-hover: oklch(0.36 0.14 265);
+  --primary-contrast: #ffffff;
+  --primary-soft: color-mix(in oklch, var(--primary) 11%, transparent);
+  --primary-gradient: linear-gradient(165deg, oklch(0.42 0.15 265) 0%, oklch(0.32 0.12 265) 100%);
+  --highlight: oklch(0.82 0.15 90);
+
+  --danger: oklch(0.55 0.19 25);
+  --danger-hover: oklch(0.49 0.18 25);
+  --success: oklch(0.55 0.14 150);
+  --warning: oklch(0.62 0.14 70);
+
+  --focus-ring: color-mix(in oklch, var(--primary) 35%, transparent);
+  --overlay: rgb(15 23 42 / 0.52);
+  --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.05);
+  --shadow: 0 8px 24px -8px rgb(16 24 40 / 0.16);
+  --shadow-lg: 0 24px 56px -16px rgb(16 24 40 / 0.32);
+
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-lg: 14px;
+
+  --sidebar-w: 242px;
+  --sidebar-mini-w: 72px;
+  --gutter: 12px;
+  --topbar-h: 60px;
+
+  --font-title: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --surface: #161a21;
+  --surface-alt: #0e1116;
+  --surface-muted: #1f242d;
+  --surface-hover: #1b2028;
+  --border: #262c37;
+  --border-strong: #343b48;
+  --text: #b5becb;
+  --text-muted: #8690a1;
+  --title: #eef1f6;
+
+  --primary: oklch(0.64 0.14 265);
+  --primary-hover: oklch(0.7 0.13 265);
+  --primary-gradient: linear-gradient(165deg, oklch(0.5 0.15 265) 0%, oklch(0.38 0.13 265) 100%);
+
+  --danger: oklch(0.66 0.18 25);
+  --danger-hover: oklch(0.72 0.17 25);
+  --success: oklch(0.72 0.14 150);
+  --warning: oklch(0.76 0.13 75);
+
+  --overlay: rgb(0 0 0 / 0.62);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow: 0 8px 24px -8px rgb(0 0 0 / 0.55);
+  --shadow-lg: 0 24px 56px -16px rgb(0 0 0 / 0.75);
+
+  color-scheme: dark;
+}

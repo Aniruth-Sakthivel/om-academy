@@ -26,7 +26,21 @@ export function currentUser(portal) {
   if (!session || !session.userId) return null;
   const user = store.byId("users", session.userId);
   if (!user || portalForRole(user.role) !== slot) return null;
+  // Settings → System: sign out after N minutes without activity (real time, not the demo date)
+  const timeoutMin = (store.get("settings").system || {}).sessionTimeoutMin;
+  const last = session.seenAt || 0;
+  if (timeoutMin > 0 && last && Date.now() - last > timeoutMin * 60000) {
+    store.setKey(slotKey(slot), null);
+    return null;
+  }
   return user;
+}
+
+// Called on page load and user activity; refreshes the inactivity timer at most once a minute.
+export function touchSession(portal) {
+  const key = slotKey(slotFor(portal));
+  const session = store.getKey(key);
+  if (session && session.userId && Date.now() - (session.seenAt || 0) > 60000) store.setKey(key, { ...session, seenAt: Date.now() });
 }
 
 export const roleOf = (user) => (user ? store.byId("roles", user.role) : null);
@@ -37,7 +51,7 @@ export const dashboardFor = (user) => (user && user.role === "student" ? "studen
 
 export function startSession(user) {
   const slot = portalForRole(user.role);
-  store.setKey(slotKey(slot), { userId: user.id, at: nowISO() });
+  store.setKey(slotKey(slot), { userId: user.id, at: nowISO(), seenAt: Date.now() });
   return slot;
 }
 

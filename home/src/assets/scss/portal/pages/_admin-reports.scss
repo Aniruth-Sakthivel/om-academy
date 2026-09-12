@@ -1,0 +1,56 @@
+@use "../../utils/mixins" as *;
+/*====== admin-reports ======*/
+
+// Page-specific styles for admin-reports.html only. Shared components live in portal/components/.
+
+.rep-filterbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+}
+
+.rep-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.rep-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+
+  .form-label {
+    margin: 0;
+    font-size: 12px;
+  }
+}
+
+// Students below the attendance minimum
+.data-table tr.rep-row-warn td {
+  background: color-mix(in oklch, var(--danger) 7%, transparent);
+}
+
+@include respond-below(sm) {
+  .rep-filters {
+    width: 100%;
+  }
+
+  .rep-filter {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+  }
+
+  .rep-filterbar > .cluster {
+    width: 100%;
+
+    .btn {
+      flex: 1 1 auto;
+    }
+  }
+}

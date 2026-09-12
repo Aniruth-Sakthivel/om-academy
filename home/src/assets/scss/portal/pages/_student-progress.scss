@@ -1,0 +1,16 @@
+@use "../../utils/mixins" as *;
+/*====== student-progress ======*/
+
+// Page-specific styles for student-progress.html only. Shared components live in portal/components/.
+
+.prog-bar {
+  margin-top: 6px;
+  max-width: 260px;
+}
+
+.prog-value {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--title);
+  font-variant-numeric: tabular-nums;
+}

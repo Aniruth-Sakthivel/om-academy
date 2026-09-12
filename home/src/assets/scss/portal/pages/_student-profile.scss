@@ -1,0 +1,206 @@
+@use "../../utils/mixins" as *;
+/*====== student-profile ======*/
+
+// Page-specific styles for student-profile.html only. Shared components live in portal/components/.
+
+.profile-layout {
+  align-items: start;
+}
+
+.profile-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  padding-top: 26px;
+}
+
+.profile-card-meta {
+  border-top: 1px solid var(--border);
+}
+
+.profile-photo {
+  position: relative;
+  margin-bottom: 8px;
+
+  .avatar {
+    box-shadow: 0 0 0 4px var(--surface), 0 0 0 5px var(--border);
+  }
+}
+
+.profile-photo-btn {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border: 3px solid var(--surface);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--primary-hover);
+  }
+
+  &:focus-within {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 1px;
+  }
+}
+
+.profile-photo-btn .visually-hidden-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.profile-name-lg {
+  font: 700 18px var(--font-title);
+  color: var(--title);
+  margin: 0;
+}
+
+.profile-section {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-alt);
+
+  .drawer-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.profile-password {
+  max-width: 440px;
+}
+
+.profile-form-actions {
+  justify-content: flex-start;
+}
+
+// Theme picker
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 240px));
+  gap: 10px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &.is-active {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
+}
+
+.theme-option-name {
+  display: block;
+  font-weight: 700;
+  color: var(--title);
+  font-size: 13.5px;
+}
+
+.theme-option-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+// Notification preferences grid
+.pref-table {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pref-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 90px 90px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.pref-head {
+  background: var(--surface-alt);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  span:not(:first-child) {
+    text-align: center;
+  }
+}
+
+.pref-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.pref-toggle-label {
+  display: none;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@include respond-below(sm) {
+  .theme-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pref-head {
+    display: none;
+  }
+
+  .pref-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > .cell-user {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .pref-toggle {
+    justify-content: flex-start;
+  }
+
+  .pref-toggle-label {
+    display: inline;
+  }
+}

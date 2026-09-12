@@ -1,0 +1,389 @@
+@use "../../utils/mixins" as *;
+/*====== admin-courses ======*/
+
+// Page-specific styles for admin-courses.html only. Shared components live in portal/components/.
+
+// Course cards
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.course-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.course-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.course-card-title {
+  font: 700 15px var(--font-title);
+  margin: 4px 0 0;
+  line-height: 1.35;
+
+  .link-btn {
+    font: inherit;
+    color: var(--title);
+    text-align: left;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+.course-card-meta {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.course-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 6px 0 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface-alt);
+
+  dt {
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 700;
+    color: var(--title);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.course-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+
+  .btn-icon {
+    margin-left: auto;
+  }
+}
+
+// Drawer hero
+.course-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+
+  .cell-user-text {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.course-hero-title {
+  font: 700 16.5px var(--font-title);
+  color: var(--title);
+}
+
+.syl-view {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  color: var(--title);
+}
+
+// Batch table seat fill
+.fill-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+
+  .progress {
+    flex: 1;
+  }
+}
+
+// Multi-select (instructors) in the batch form
+.modal select[multiple] {
+  min-height: 132px;
+}
+
+// Syllabus editor
+.syl-list {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.syl-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+
+  .form-control {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.syl-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.syl-remove,
+.roster-drop,
+.btn-danger-text {
+  color: var(--danger);
+}
+
+.syl-add {
+  display: flex;
+  gap: 8px;
+
+  .form-control {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// Module checklist
+.module-list {
+  display: grid;
+  gap: 6px;
+}
+
+.module-item {
+  display: flex;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  &.is-done {
+    background: color-mix(in oklch, var(--success) 8%, transparent);
+    border-color: color-mix(in oklch, var(--success) 30%, var(--border));
+  }
+}
+
+// Roster
+.roster-row {
+  padding: 10px 14px;
+}
+
+.roster-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.roster-past {
+  margin: 10px 0 0;
+}
+
+// Enrol picker
+.enrol-pick {
+  max-height: 340px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  li + li {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.enrol-pick-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  .list-row-main {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.enrol-count {
+  margin-right: auto;
+}
+
+// Weekly timetable
+.tt-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.tt-grid {
+  display: grid;
+  grid-template-columns: 96px repeat(6, minmax(130px, 1fr));
+  min-width: 880px;
+}
+
+.tt-head,
+.tt-time,
+.tt-cell {
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 8px;
+
+  &:nth-child(7n) {
+    border-right: 0;
+  }
+}
+
+.tt-head {
+  background: var(--surface-alt);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.tt-corner {
+  text-align: left;
+}
+
+.tt-time {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--title);
+  font-variant-numeric: tabular-nums;
+
+  span {
+    display: block;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+}
+
+.tt-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 72px;
+}
+
+.tt-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 7px 9px;
+  border: 0;
+  border-left: 3px solid var(--tone-fg, var(--primary));
+  border-radius: 8px;
+  background: var(--tone-bg, var(--primary-soft));
+  color: var(--title);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: filter 0.15s;
+
+  &:hover {
+    filter: brightness(0.97);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 1px;
+  }
+}
+
+.tt-slot-code {
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--tone-fg, var(--primary));
+}
+
+.tt-slot-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  color: var(--text);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@include respond-below(md) {
+  .course-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@include respond-below(sm) {
+  .course-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .course-hero {
+    flex-wrap: wrap;
+  }
+
+  .roster-row {
+    flex-wrap: wrap;
+  }
+
+  .roster-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .syl-add {
+    flex-direction: column;
+  }
+}

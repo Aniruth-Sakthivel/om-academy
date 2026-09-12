@@ -1,0 +1,42 @@
+/*============================
+  Tones (portal, dark-mode aware)
+============================*/
+
+// .tone-<name> sets --tone-fg; --tone-bg is derived from it with color-mix, so it adapts to both themes.
+// Names match ui.js (badges, toasts, avatars, stat icons) and course.tone in the seed data.
+// Keys are quoted so Sass doesn't read blue/green/purple/navy as colour values.
+
+$tones-light: (
+  "blue": oklch(0.5 0.16 255),
+  "green": oklch(0.52 0.14 150),
+  "amber": oklch(0.58 0.14 65),
+  "rust": oklch(0.54 0.18 30),
+  "purple": oklch(0.5 0.17 300),
+  "navy": oklch(0.42 0.15 265),
+  "slate": oklch(0.52 0.02 264),
+);
+
+$tones-dark: (
+  "blue": oklch(0.74 0.12 255),
+  "green": oklch(0.76 0.13 150),
+  "amber": oklch(0.8 0.12 75),
+  "rust": oklch(0.74 0.14 30),
+  "purple": oklch(0.76 0.12 300),
+  "navy": oklch(0.72 0.11 265),
+  "slate": oklch(0.74 0.02 264),
+);
+
+@each $name, $color in $tones-light {
+  .tone-#{$name} {
+    --tone-fg: #{$color};
+    --tone-bg: color-mix(in oklch, var(--tone-fg) 13%, transparent);
+    --tone-border: color-mix(in oklch, var(--tone-fg) 30%, transparent);
+  }
+}
+
+@each $name, $color in $tones-dark {
+  :root[data-theme="dark"] .tone-#{$name} {
+    --tone-fg: #{$color};
+    --tone-bg: color-mix(in oklch, var(--tone-fg) 16%, transparent);
+  }
+}

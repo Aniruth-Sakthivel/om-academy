@@ -1,0 +1,59 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 606 >>
+stream
+BT
+/F1 20 Tf
+72 740 Td
+(OM Academy - Syllabus & Study Plan) Tj
+/F1 12 Tf
+0 -34 Td
+(Sample course document for the OM Academy portal demo.) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(Module 1: Computer Fundamentals) Tj
+0 -20 Td
+(Module 2: Operating System Basics) Tj
+0 -20 Td
+(Module 3: Word Processing & Spreadsheets) Tj
+0 -20 Td
+(Module 4: Presentations & Internet) Tj
+0 -20 Td
+(Module 5: Digital Financial Tools) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(Weekly plan: 3 theory classes + 1 lab session.) Tj
+0 -20 Td
+(Assessment: Mid-term \(40%\) + Term final \(60%\).) Tj
+0 -20 Td
+(Minimum attendance for exam eligibility: 60%.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000898 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+968
+%%EOF

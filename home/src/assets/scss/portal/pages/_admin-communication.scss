@@ -1,0 +1,63 @@
+@use "../../utils/mixins" as *;
+/*====== admin-communication ======*/
+
+// Page-specific styles for admin-communication.html only. Shared components live in portal/components/.
+
+.comm-pin {
+  margin-right: 4px;
+  vertical-align: -2px;
+  color: var(--primary);
+}
+
+.comm-read {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 90px;
+}
+
+.comm-chat {
+  border-top: 1px solid var(--border);
+}
+
+.comm-section-head {
+  border-top: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.comm-direct-foot {
+  margin-top: 16px;
+}
+
+.comm-sent {
+  align-self: start;
+}
+
+.comm-report {
+  align-items: flex-start;
+
+  .alert-actions {
+    align-self: flex-start;
+  }
+}
+
+.comm-report-body {
+  margin: 4px 0 8px;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@include respond-below(sm) {
+  .comm-report {
+    flex-wrap: wrap;
+
+    .alert-actions {
+      width: 100%;
+
+      .btn {
+        flex: 1 1 auto;
+      }
+    }
+  }
+}

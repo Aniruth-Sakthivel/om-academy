@@ -1,0 +1,190 @@
+@use "../../utils/mixins" as *;
+/*====== admin-users ======*/
+
+// Page-specific styles for admin-users.html only. Shared components live in portal/components/.
+
+.users-course-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px 0;
+
+  .form-control {
+    max-width: 320px;
+  }
+}
+
+.users-kpi-small {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+// Profile drawer
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+
+  .cell-user-text {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.profile-hero-name {
+  font: 700 17px var(--font-title);
+  color: var(--title);
+}
+
+.enrol-tile {
+  align-items: flex-start;
+}
+
+.enrol-att {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+
+  .progress {
+    flex: 1;
+    max-width: 220px;
+  }
+}
+
+.fee-mini {
+  margin-bottom: 12px;
+}
+
+.temp-password {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px dashed var(--border-strong);
+  background: var(--surface-alt);
+
+  code {
+    font: 700 17px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--title);
+    letter-spacing: 0.04em;
+    user-select: all;
+    overflow-wrap: anywhere;
+  }
+}
+
+.csv-preview {
+  margin-top: 16px;
+
+  .table-scroll {
+    max-height: 280px;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+}
+
+// Roles & permissions
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.role-card {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.role-card-desc {
+  margin: 6px 0 10px;
+  min-height: 2.6em;
+}
+
+.role-card-demo {
+  margin: 10px 0 0;
+}
+
+.perm-scroll {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.perm-matrix {
+  min-width: 640px;
+
+  th:first-child,
+  td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--surface);
+    min-width: 220px;
+  }
+
+  .perm-module td:first-child {
+    background: var(--surface-alt);
+  }
+}
+
+.perm-role-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.perm-label {
+  display: block;
+  color: var(--title);
+  font-weight: 600;
+}
+
+.perm-key {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.perm-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.perm-actions {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+@include respond-below(sm) {
+  .users-course-filter {
+    padding: 12px 12px 0;
+
+    .form-control {
+      max-width: none;
+      flex: 1;
+    }
+  }
+
+  .profile-hero {
+    flex-wrap: wrap;
+  }
+
+  .perm-matrix {
+    th:first-child,
+    td:first-child {
+      min-width: 160px;
+    }
+  }
+}

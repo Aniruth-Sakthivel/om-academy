@@ -1,0 +1,73 @@
+/*============================
+  Cards
+============================*/
+
+// Bordered, no shadow (Dreams ERP card style)
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  min-width: 0;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 12px;
+  flex-wrap: wrap;
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-header-plain {
+  border-bottom: 0;
+  padding-bottom: 4px;
+}
+
+.card-title {
+  font: 700 15.5px var(--font-title);
+  color: var(--title);
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.card-body-flush {
+  padding: 0;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+}
+
+// A card whose header holds tabs (tabs sit flush with the card edges)
+.card > .tabs {
+  padding: 0 14px;
+}
+
+// Chart containers keep their height while ApexCharts loads (no layout jump)
+.chart-box {
+  min-height: 240px;
+}
+
+.chart-box-sm {
+  min-height: 180px;
+}
+
+.chart-box-lg {
+  min-height: 300px;
+}

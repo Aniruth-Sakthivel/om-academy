@@ -1,0 +1,615 @@
+@use "../../utils/mixins" as *;
+/*============================
+  Portal shell: sidebar, topbar, page wrapper, search overlay (markup in core/shell.js)
+============================*/
+
+// Floating card sidebar (Dreams ERP): 242px, inset by the gutter; icon-only "mini" mode; off-canvas on phones/tablets.
+
+.sidebar {
+  position: fixed;
+  top: var(--gutter);
+  bottom: var(--gutter);
+  left: var(--gutter);
+  z-index: 60;
+  width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: width 0.22s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 14px 0 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.brand-mark-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: var(--title);
+
+  &:hover {
+    color: var(--title);
+  }
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--primary-gradient);
+  color: #fff;
+  font: 700 14px var(--font-title);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.brand-name {
+  font: 700 15px var(--font-title);
+  color: var(--title);
+}
+
+.brand-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.sidebar-close {
+  display: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  place-items: center;
+  cursor: pointer;
+}
+
+.sidebar-inner {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 12px 12px;
+  scrollbar-width: thin;
+}
+
+.sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-title {
+  padding: 14px 10px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 2px;
+  border-radius: 9px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--surface-muted);
+    color: var(--title);
+
+    .nav-ico {
+      color: var(--primary);
+    }
+  }
+
+  &.active {
+    background: var(--primary);
+    color: #fff;
+
+    .nav-ico {
+      color: #fff;
+    }
+  }
+}
+
+.nav-ico {
+  display: flex;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-badge {
+  min-width: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  background: color-mix(in oklch, var(--danger) 14%, transparent);
+  color: var(--danger);
+
+  .nav-link.active & {
+    background: rgb(255 255 255 / 0.22);
+    color: #fff;
+  }
+}
+
+.sidebar-scope-note {
+  list-style: none;
+  margin: 16px 6px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.sidebar-mini-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--title);
+    background: var(--surface-muted);
+  }
+
+  body.mini-sidebar & svg {
+    transform: scaleX(-1);
+  }
+}
+
+// Settings → System maintenance notice, shown under the topbar in both portals
+.maintenance-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px var(--gutter) 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in oklch, var(--warning) 40%, transparent);
+  background: color-mix(in oklch, var(--warning) 12%, var(--surface));
+  color: var(--title);
+  font-size: 13.5px;
+
+  svg {
+    flex-shrink: 0;
+    color: var(--warning);
+  }
+}
+
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  background: var(--overlay);
+  animation: portal-fade-up 0.2s ease-out;
+}
+
+/* ---------- page wrapper + topbar ---------- */
+
+.page-wrapper {
+  margin-left: calc(var(--sidebar-w) + var(--gutter) * 2);
+  margin-right: var(--gutter);
+  padding-top: var(--gutter);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.22s ease;
+}
+
+.topbar {
+  position: sticky;
+  top: var(--gutter);
+  z-index: 50;
+
+  // Covers the gutter above the floating topbar so content doesn't show through while scrolling
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: var(--gutter);
+    background: var(--surface-alt);
+  }
+}
+
+.topbar-inner {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 12px 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.topbar-icon-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--surface-muted);
+    color: var(--title);
+  }
+}
+
+.mobile-only {
+  display: none;
+}
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  min-width: 280px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  font: 13.5px var(--font-body);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+}
+
+.icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] {
+  .icon-sun {
+    display: block;
+  }
+
+  .icon-moon {
+    display: none;
+  }
+}
+
+.topbar-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--danger);
+  border: 2px solid var(--surface);
+}
+
+.profile-toggle {
+  border: 0;
+  background: none;
+  padding: 2px;
+  margin-left: 4px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+}
+
+[data-page-main] {
+  flex: 1;
+  padding: 22px 2px 8px;
+  outline: none;
+  min-width: 0;
+}
+
+.portal-footer {
+  padding: 14px 2px 18px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+
+  p {
+    margin: 0;
+  }
+}
+
+/* ---------- global search overlay ---------- */
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10vh 16px 16px;
+  background: var(--overlay);
+}
+
+.search-panel {
+  width: 100%;
+  max-width: 580px;
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: portal-fade-up 0.18s ease-out;
+}
+
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.search-input {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  background: none;
+  font: 15px var(--font-body);
+  color: var(--title);
+  outline: none;
+}
+
+.search-results {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 6px;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--text);
+
+  &:hover,
+  &:focus {
+    background: var(--surface-muted);
+    color: var(--title);
+  }
+
+  svg {
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+}
+
+.search-result-label {
+  display: block;
+  font-weight: 600;
+  color: var(--title);
+}
+
+.search-result-sub {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- mini (icon-only) sidebar ---------- */
+
+// Labels hide only while the sidebar isn't hovered, so hovering expands it back to full width over the page.
+@mixin mini-sidebar {
+  .page-wrapper {
+    margin-left: calc(var(--sidebar-mini-w) + var(--gutter) * 2);
+  }
+
+  .sidebar:not(:hover) {
+    width: var(--sidebar-mini-w);
+
+    .brand-text,
+    .nav-label,
+    .nav-badge,
+    .sidebar-scope-note,
+    .menu-title span {
+      display: none;
+    }
+
+    .menu-title {
+      padding: 8px 4px 6px;
+
+      &::after {
+        content: "";
+        display: block;
+        height: 1px;
+        background: var(--border);
+      }
+    }
+
+    .sidebar-logo {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .sidebar-mini-toggle {
+      display: none;
+    }
+
+    .sidebar-inner {
+      padding: 8px 10px 12px;
+    }
+
+    .nav-link {
+      justify-content: center;
+      padding: 10px 0;
+    }
+  }
+
+  .sidebar:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// Desktop: user-toggled mini mode
+@media (min-width: 1181px) {
+  body.mini-sidebar {
+    @include mini-sidebar;
+  }
+}
+
+// Laptops / small desktops: always mini (no room for the full sidebar), toggle hidden
+@media (min-width: 901px) and (max-width: 1180px) {
+  body {
+    @include mini-sidebar;
+  }
+
+  .sidebar-mini-toggle {
+    display: none;
+  }
+
+  .topbar-search {
+    min-width: 200px;
+  }
+}
+
+/* ---------- tablets & phones: off-canvas sidebar ---------- */
+
+@include respond-below(md) {
+  .sidebar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(280px, 86vw);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    border-left: 0;
+    transform: translateX(-105%);
+    box-shadow: var(--shadow-lg);
+
+    &.is-open {
+      transform: none;
+    }
+  }
+
+  .sidebar-close {
+    display: grid;
+  }
+
+  .sidebar-mini-toggle {
+    display: none;
+  }
+
+  .page-wrapper {
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .topbar {
+    top: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .topbar-inner {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    padding: 0 8px;
+  }
+
+  .mobile-only {
+    display: grid;
+  }
+
+  .topbar-search {
+    min-width: 0;
+    width: 38px;
+    padding: 0;
+    justify-content: center;
+    border-color: transparent;
+    background: transparent;
+
+    span {
+      display: none;
+    }
+  }
+
+  [data-page-main] {
+    padding: 16px 14px 8px;
+  }
+
+  .portal-footer {
+    padding: 12px 14px 18px;
+  }
+}

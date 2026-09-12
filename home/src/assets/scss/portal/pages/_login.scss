@@ -1,0 +1,357 @@
+@use "../../utils/mixins" as *;
+/*====== Login ======*/
+
+.login-page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  background: var(--surface-alt);
+}
+
+// Brand primary (#23459d) — fixed, not the theme's --primary, so the panel looks the same in dark mode
+$login-primary: oklch(0.42 0.15 265);
+
+.login-aside {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 48px;
+  padding: 40px 80px 40px 48px;
+  background: $login-primary;
+  color: #fff;
+
+  // Subtle dot texture over the fade
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+    pointer-events: none;
+  }
+}
+
+
+.login-brand {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+
+  &:hover {
+    color: #fff;
+  }
+
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 16px;
+    background: rgb(255 255 255 / 0.16);
+    border: 1px solid rgb(255 255 255 / 0.3);
+  }
+}
+
+.login-brand-name {
+  display: block;
+  font: 700 18px var(--font-title);
+}
+
+.login-brand-tag {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgb(255 255 255 / 0.75);
+}
+
+.login-hero {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+}
+
+.login-hero-title {
+  font: 800 clamp(26px, 3vw, 36px) / 1.2 var(--font-title);
+  color: #fff;
+  margin: 0 0 14px;
+
+  span {
+    color: var(--highlight);
+  }
+}
+
+.login-hero-text {
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgb(255 255 255 / 0.82);
+}
+
+.login-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgb(255 255 255 / 0.92);
+  }
+}
+
+.login-point-ico {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: rgb(255 255 255 / 0.14);
+  flex-shrink: 0;
+}
+
+// Building photo fills the rest of the panel, full-bleed, and fades up into the blue (home enquiry modal style)
+// Curved right edge with a green stroke; the fill matches the form side so it also clips the photo
+.login-curve {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 48px;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.login-curve-fill {
+  fill: var(--surface-alt);
+}
+
+.login-curve-line {
+  fill: none;
+  stroke: var(--accent);
+}
+
+.login-main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.login-theme {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+}
+
+.login-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.login-title {
+  font: 700 26px var(--font-title);
+  color: var(--title);
+  margin: 0 0 6px;
+}
+
+.login-sub {
+  margin: 0 0 22px;
+  color: var(--text-muted);
+}
+
+.portal-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background: var(--surface-muted);
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    font: 600 13.5px var(--font-body);
+    color: var(--text);
+    cursor: pointer;
+
+    &[aria-selected="true"] {
+      background: var(--surface);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.password-field {
+  position: relative;
+
+  .form-control {
+    padding-right: 44px;
+  }
+}
+
+.password-toggle {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.demo-accounts-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+}
+
+.demo-accounts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.demo-accounts-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.demo-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
+}
+
+.demo-account-text {
+  min-width: 0;
+}
+
+.demo-account-role {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--title);
+}
+
+.demo-account-hint {
+  display: block;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+.login-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+@include respond-below(md) {
+  .login-page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .login-aside {
+    padding: 22px 20px;
+    gap: 14px;
+  }
+
+  .login-hero-text,
+  .login-points,
+  .login-curve {
+    display: none;
+  }
+
+  .login-hero-title {
+    font-size: 22px;
+    margin: 0;
+  }
+
+  .login-main {
+    padding: 28px 18px 36px;
+    align-items: flex-start;
+  }
+
+  .login-theme {
+    top: -58px;
+    right: 14px;
+  }
+
+  .login-theme .topbar-icon-btn {
+    color: #fff;
+  }
+}
+
+@include respond-below(sm) {
+  .demo-accounts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

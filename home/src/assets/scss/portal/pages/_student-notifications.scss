@@ -1,0 +1,207 @@
+@use "../../utils/mixins" as *;
+/*====== student-notifications ======*/
+
+// Page-specific styles for student-notifications.html only. Shared components live in portal/components/.
+
+.notif-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+
+  .segmented button[aria-pressed="true"] {
+    background: var(--primary);
+    color: #fff;
+  }
+}
+
+.notif-type-select {
+  width: auto;
+  min-width: 160px;
+}
+
+.notif-row {
+  align-items: flex-start;
+
+  &.is-unread {
+    background: var(--primary-soft);
+
+    .notif-row-title {
+      font-weight: 700;
+    }
+  }
+}
+
+.notif-row-title {
+  font-weight: 600;
+  color: var(--title);
+  overflow-wrap: anywhere;
+}
+
+.notif-row-body {
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.notif-row-meta {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.notif-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+// Chat additions
+.chat-thread-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-thread-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.chat-thread-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chat-thread-item .dot {
+  align-self: center;
+}
+
+.chat-empty {
+  display: grid;
+  place-items: center;
+  min-height: 420px;
+}
+
+.chat-back {
+  display: none;
+}
+
+.msg-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+
+  .is-mine & {
+    align-items: flex-end;
+  }
+}
+
+.msg-sender {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.msg-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--title);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
+
+.chat-compose {
+  align-items: flex-end;
+}
+
+.chat-compose-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-attach {
+  position: relative;
+  cursor: pointer;
+
+  &:focus-within {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 1px;
+  }
+}
+
+.visually-hidden-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.chat-attach-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  font-size: 12px;
+  color: var(--title);
+}
+
+@include respond-below(md) {
+  .chat-layout.has-active {
+    .chat-list {
+      display: none;
+    }
+
+    .chat-back {
+      display: inline-flex;
+    }
+  }
+
+  .chat-layout:not(.has-active) .chat-pane {
+    display: none;
+  }
+}
+
+@include respond-below(sm) {
+  .notif-row {
+    flex-wrap: wrap;
+  }
+
+  .notif-row-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .notif-type-select {
+    flex: 1;
+  }
+}

@@ -1,0 +1,122 @@
+@use "../../utils/mixins" as *;
+/*====== admin-settings ======*/
+
+// Page-specific styles for admin-settings.html only. Shared components live in portal/components/.
+
+.set-section {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+
+  &:last-of-type {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+.set-section-head {
+  margin-bottom: 12px;
+}
+
+.set-section-title {
+  margin: 0 0 2px;
+  font: 700 14.5px var(--font-title);
+  color: var(--title);
+}
+
+.set-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.set-preview,
+.set-demo-card {
+  align-self: start;
+}
+
+.set-doc-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+
+  .print-mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--primary-gradient);
+    color: #fff;
+    font-weight: 700;
+  }
+}
+
+.set-divider {
+  border-top: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.set-calendar {
+  min-height: 320px;
+}
+
+// position: relative keeps the visually-hidden header inside the scroll box (otherwise it widens the page)
+.set-scale-wrap {
+  position: relative;
+  margin-top: 12px;
+}
+
+.set-scale {
+  td {
+    vertical-align: middle;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+.set-in-xs {
+  width: 72px;
+}
+
+.set-in-sm {
+  width: 96px;
+}
+
+.set-toggle-row {
+  padding: 12px 0;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.set-demo-input {
+  flex: 1 1 160px;
+  width: auto;
+}
+
+.set-usage-bar {
+  margin: 10px 0 16px;
+}
+
+.set-danger-card {
+  border-color: color-mix(in oklch, var(--danger) 35%, var(--border));
+}
+
+@include respond-below(sm) {
+  .set-actions .btn {
+    width: 100%;
+  }
+
+  .set-scale {
+    min-width: 520px;
+  }
+}

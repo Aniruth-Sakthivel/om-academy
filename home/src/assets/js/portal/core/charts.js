@@ -29,28 +29,41 @@ async function load() {
   return ApexCharts;
 }
 
+// Chart animations are off. ApexCharts draws lines in by animating stroke-dashoffset; the portal updates charts
+// live (same-tab writes and other tabs via the storage event), and an update that lands mid-animation leaves the
+// line stuck half-drawn. Rendering instantly is reliable in every case (hidden tabs, rapid updates, reduced motion).
+function animationOptions() {
+  return { enabled: false };
+}
+
+// Merge chart-shape options over the portal defaults. The nested objects (chart, grid, legend, tooltip, dataLabels)
+// are merged key by key, so a shape that sets e.g. chart.type doesn't lose the hidden toolbar or the brand colours.
 function baseOptions(overrides = {}) {
   const p = palette();
+  const { chart = {}, grid = {}, legend = {}, tooltip = {}, dataLabels = {}, colors, ...rest } = overrides;
   return {
-    chart: { fontFamily: "Inter, sans-serif", toolbar: { show: false }, foreColor: p.text, ...(overrides.chart || {}) },
-    colors: overrides.colors || p.series,
-    grid: { borderColor: p.grid, strokeDashArray: 3, padding: { left: 8, right: 8 }, ...(overrides.grid || {}) },
-    dataLabels: { enabled: false },
-    tooltip: { theme: currentTheme() },
-    legend: { fontFamily: "Inter, sans-serif", labels: { colors: p.text }, ...(overrides.legend || {}) },
-    ...overrides,
+    ...rest,
+    // Marks charts given their own colours, so a theme toggle keeps them (read and removed in render()).
+    __customColors: !!(colors && colors.length),
+    chart: { fontFamily: "Inter, sans-serif", toolbar: { show: false }, zoom: { enabled: false }, foreColor: p.text, animations: animationOptions(), ...chart },
+    colors: colors && colors.length ? colors : p.series,
+    grid: { borderColor: p.grid, strokeDashArray: 3, padding: { left: 8, right: 8 }, ...grid },
+    dataLabels: { enabled: false, ...dataLabels },
+    tooltip: { theme: currentTheme(), ...tooltip },
+    legend: { fontFamily: "Inter, sans-serif", labels: { colors: p.text }, ...legend },
   };
 }
 
-// Track live charts so the theme toggle can re-render every one of them.
-const live = new Set();
+// Live charts → { customColors } so the theme toggle can re-tint every one of them.
+const live = new Map();
 
 async function render(el, options) {
   if (!el) return null;
+  const { __customColors = false, ...opts } = options;
   const Ctor = await load();
-  const chart = new Ctor(el, options);
+  const chart = new Ctor(el, opts);
   await chart.render();
-  live.add(chart);
+  live.set(chart, { customColors: __customColors });
   const destroy = chart.destroy.bind(chart);
   chart.destroy = () => {
     live.delete(chart);
@@ -59,11 +72,15 @@ async function render(el, options) {
   return chart;
 }
 
+// Re-tint text, grid and tooltip for the new theme. Series colours change only on charts using the default
+// palette; charts created with their own colours keep them.
 export async function updateTheme() {
-  for (const chart of live) {
+  for (const [chart, meta] of live) {
     const p = palette();
+    const patch = { chart: { foreColor: p.text }, grid: { borderColor: p.grid }, tooltip: { theme: currentTheme() }, legend: { labels: { colors: p.text } } };
+    if (!meta.customColors) patch.colors = p.series;
     try {
-      await chart.updateOptions({ chart: { foreColor: p.text }, colors: p.series, grid: { borderColor: p.grid }, tooltip: { theme: currentTheme() }, legend: { labels: { colors: p.text } } }, false, false);
+      await chart.updateOptions(patch, false, false);
     } catch {
       /* chart may have been destroyed mid-toggle */
     }
@@ -151,7 +168,7 @@ export function radarChart(el, { series, categories, height = 260, colors } = {}
 export function sparkline(el, { data, height = 44, color } = {}) {
   const p = palette();
   return render(el, {
-    chart: { type: "line", height, sparkline: { enabled: true }, foreColor: p.text },
+    chart: { type: "line", height, sparkline: { enabled: true }, foreColor: p.text, animations: animationOptions() },
     series: [{ data }],
     colors: [color || p.primary],
     stroke: { curve: "smooth", width: 2 },

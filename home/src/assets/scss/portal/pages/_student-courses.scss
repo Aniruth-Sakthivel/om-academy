@@ -1,0 +1,104 @@
+@use "../../utils/mixins" as *;
+/*====== student-courses ======*/
+
+// Page-specific styles for student-courses.html only. Shared components live in portal/components/.
+
+.course-card {
+  display: flex;
+  flex-direction: column;
+
+  .card-body {
+    flex: 1;
+  }
+
+  .card-header {
+    align-items: flex-start;
+  }
+
+  .card-footer {
+    flex-wrap: wrap;
+  }
+}
+
+.course-card-head {
+  flex-wrap: nowrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.course-card-titles {
+  min-width: 0;
+}
+
+.course-dot {
+  background: var(--tone-fg, var(--primary));
+}
+
+// Syllabus modules in the course drawer
+.syllabus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.syllabus-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+
+  &.is-done {
+    background: var(--surface-alt);
+  }
+}
+
+.course-links {
+  .file-tile {
+    color: inherit;
+
+    &:hover {
+      background: var(--surface-hover);
+      color: inherit;
+    }
+  }
+}
+
+// Weekly timetable: FullCalendar grid on larger screens, a day list on phones
+.tt-daylist {
+  display: none;
+}
+
+.tt-day-list {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tt-slot {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+.tt-day.is-today .tt-day-list {
+  border-color: var(--primary);
+}
+
+@include respond-below(sm) {
+  .tt-week {
+    display: none;
+  }
+
+  .tt-daylist {
+    display: block;
+  }
+
+  .course-links {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

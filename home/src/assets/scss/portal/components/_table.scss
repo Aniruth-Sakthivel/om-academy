@@ -1,0 +1,334 @@
+@use "../../utils/mixins" as *;
+/*============================
+  Data table (ui.dataTable)
+============================*/
+
+.data-table-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-toolbar-left,
+.table-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.table-toolbar-left select.form-control {
+  width: auto;
+  max-width: 200px;
+}
+
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  svg {
+    position: absolute;
+    left: 10px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  input {
+    padding-left: 32px;
+    width: 230px;
+  }
+}
+
+.table-total-count,
+.table-selected-count {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.table-selected-count {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+
+  th {
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  th[data-dt-sort]:not([data-dt-sort=""]) {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      color: var(--title);
+    }
+  }
+
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover td {
+    background: var(--surface-hover);
+  }
+
+  tr.is-clickable {
+    cursor: pointer;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+}
+
+.col-check {
+  width: 40px;
+}
+
+.col-actions {
+  width: 56px;
+  text-align: right;
+}
+
+.sort-ico {
+  vertical-align: -2px;
+  margin-left: 4px;
+}
+
+.table-empty {
+  padding: 8px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  select.form-control {
+    width: auto;
+  }
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pg-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: 600 12.5px var(--font-body);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+
+  &:hover:not(:disabled):not(.is-active) {
+    background: var(--surface-hover);
+  }
+
+  &.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.pg-ellipsis {
+  padding: 0 4px;
+}
+
+// Plain (non-dataTable) tables inside cards
+.simple-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+
+  th,
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+
+  th {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface-alt);
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+}
+
+@include respond-below(md) {
+  .data-table .hide-below-md {
+    display: none;
+  }
+}
+
+// Phones: each row becomes a stacked card with "Label  value" lines (td[data-label])
+@include respond-below(sm) {
+  .table-toolbar {
+    padding: 12px 14px;
+  }
+
+  .table-toolbar-left,
+  .search-field,
+  .search-field input {
+    width: 100%;
+  }
+
+  .table-toolbar-left select.form-control {
+    max-width: none;
+    flex: 1 1 140px;
+  }
+
+  .data-table {
+    thead {
+      display: none;
+    }
+
+    tbody,
+    tr,
+    td {
+      display: block;
+      width: 100%;
+    }
+
+    tr {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    tbody tr:last-child {
+      border-bottom: 0;
+    }
+
+    td {
+      border: 0;
+      padding: 4px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      text-align: right;
+
+      &::before {
+        content: attr(data-label);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-align: left;
+        flex-shrink: 0;
+      }
+    }
+
+    tbody tr:hover td {
+      background: transparent;
+    }
+
+    td.col-check,
+    td.col-actions {
+      position: absolute;
+      top: 8px;
+      width: auto;
+      padding: 0;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    td.col-check {
+      left: 14px;
+    }
+
+    td.col-actions {
+      right: 10px;
+    }
+
+    .hide-below-sm,
+    .hide-below-md {
+      display: none;
+    }
+  }
+
+  .pagination {
+    padding: 12px 14px;
+    justify-content: center;
+  }
+}

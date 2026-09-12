@@ -109,6 +109,8 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: "../dist",
     emptyOutDir: true,
+    // ApexCharts (~960 KB) is only ever loaded lazily by pages that draw charts, so it's allowed to be large.
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: getHtmlEntries(),
       output: {

@@ -1,0 +1,91 @@
+@use "../../utils/mixins" as *;
+/*====== admin-dashboard ======*/
+
+// Page-specific styles for admin-dashboard.html only. Shared components live in portal/components/.
+
+// Each card sits in a slot so live updates can repaint one card without touching the charts
+.dash-slot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  > .card {
+    flex: 1;
+  }
+}
+
+.dash-welcome-text {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.dash-welcome-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgb(255 255 255 / 0.85);
+}
+
+.dash-welcome-actions {
+  position: relative;
+  z-index: 1;
+}
+
+.btn.dash-welcome-btn {
+  background: rgb(255 255 255 / 0.14);
+  border: 1px solid rgb(255 255 255 / 0.28);
+  color: #fff;
+
+  &:hover {
+    background: rgb(255 255 255 / 0.24);
+    color: #fff;
+  }
+}
+
+.dash-batch {
+  align-items: flex-start;
+}
+
+.dash-batch-progress {
+  margin-top: 8px;
+}
+
+// Date tile for upcoming events
+.dash-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+  line-height: 1.1;
+}
+
+.dash-date-day {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.dash-date-mon {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+@include respond-below(sm) {
+  .dash-welcome-actions {
+    width: 100%;
+
+    .btn {
+      flex: 1 1 auto;
+    }
+  }
+}
