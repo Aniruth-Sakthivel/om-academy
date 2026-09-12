@@ -15,5 +15,14 @@
     "sass": "^1.104.0",
     "vite": "^6",
     "vite-plugin-static-copy": "^4.1.0"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "6.1.21",
+    "@fullcalendar/daygrid": "6.1.21",
+    "@fullcalendar/interaction": "6.1.21",
+    "@fullcalendar/list": "6.1.21",
+    "@fullcalendar/timegrid": "6.1.21",
+    "apexcharts": "7.2.0",
+    "lucide": "1.45.0"
   }
 }

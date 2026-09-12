@@ -74,6 +74,19 @@ function getHtmlEntries() {
   return entries;
 }
 
+// Stable chunk names: one stylesheet per site (main.css for the home page, portal.css for the portal),
+// the portal core shared by every portal page, and the lazily loaded vendor libraries.
+function manualChunks(id) {
+  const p = id.replace(/\\/g, "/");
+  if (p.includes("/node_modules/apexcharts/")) return "vendor-apexcharts";
+  if (p.includes("/node_modules/@fullcalendar/") || p.includes("/node_modules/preact")) return "vendor-calendar";
+  if (p.includes("/node_modules/lucide/")) return "vendor-icons";
+  if (p.includes("/assets/scss/main.scss")) return "main";
+  if (p.includes("/assets/scss/portal.scss")) return "portal";
+  if (p.includes("/assets/js/portal/core/") && !p.endsWith("/seed.js")) return "portal-core";
+  return undefined;
+}
+
 export default defineConfig(({ command }) => ({
   root: "src",
   base: "./",
@@ -85,7 +98,12 @@ export default defineConfig(({ command }) => ({
     preserveImagesPlugin(),
     reloadOnHtmlChange(),
     command === "build"
-      ? viteStaticCopy({ targets: [{ src: "assets/img", dest: "." }] })
+      ? viteStaticCopy({
+          targets: [
+            { src: "assets/img", dest: "." },
+            { src: "assets/files", dest: "." },
+          ],
+        })
       : [],
   ],
   build: {
@@ -98,9 +116,10 @@ export default defineConfig(({ command }) => ({
         chunkFileNames: "assets/js/[name].js",
         assetFileNames: (assetInfo) => {
           const name = (assetInfo.names && assetInfo.names[0]) || assetInfo.name || "";
-          if (name.endsWith(".css")) return "assets/css/style.css";
-          return "assets/[name].[ext]";
+          if (name.endsWith(".css")) return "assets/css/[name][extname]";
+          return "assets/[name][extname]";
         },
+        manualChunks,
       },
     },
   },
